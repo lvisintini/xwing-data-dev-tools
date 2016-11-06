@@ -13,7 +13,7 @@ from pprint import pprint
 
 # FIXME
 # Ships.faction for ships.factions
-# normalize all manouver arrays
+# normalize all manouver arrays (speed)
 # normalize size attr
 # separate huge from small and large
 
@@ -30,6 +30,7 @@ from pprint import pprint
 
 class SchemaBuilder:
     host = 'https://github.com/lvisintini/xwing-data/schema/'
+    files_root = '../xwing-data/'
     target_key = ''
 
     schema = None
@@ -160,7 +161,7 @@ class XWingSchemaBuilder(SchemaBuilder):
 
     def load_data(self):
         for key in self.source_keys:
-            with open('./data/{}.js'.format(key), 'r') as file_object:
+            with open('{}data/{}.js'.format(self.files_root, key), 'r') as file_object:
                 self.data.extend(json.load(file_object, object_pairs_hook=OrderedDict))
 
     def gather_required(self):
@@ -219,7 +220,6 @@ class XWingSchemaBuilder(SchemaBuilder):
                         self.properties[attr]['enum'].append(value)
                     self.properties[attr]['enum'] = list(set(self.properties[attr]['enum']))
                     self.properties[attr]['enum'].sort()
-
 
         for attr in self.properties.keys():
             if isinstance(self.properties[attr]['type'], list):
@@ -423,7 +423,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
 
     def load_data(self):
         for key in self.source_keys:
-            with open('./data/{}.js'.format(key), 'r') as file_object:
+            with open('{}data/{}.js'.format(self.files_root, key), 'r') as file_object:
                 unfiltered_data = json.load(file_object, object_pairs_hook=OrderedDict)
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] == 'huge'])
 
@@ -508,7 +508,7 @@ class ShipsBuilder(XWingSchemaBuilder):
 
     def load_data(self):
         for key in self.source_keys:
-            with open('./data/{}.js'.format(key), 'r') as file_object:
+            with open('{}data/{}.js'.format(self.files_root, key), 'r') as file_object:
                 unfiltered_data = json.load(file_object, object_pairs_hook=OrderedDict)
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] != 'huge'])
 
