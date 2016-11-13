@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://github.com/lvisintini/xwing-data/schema/sources.json",
+  "type": "object",
+  "definitions": {},
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "name": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "thumb": {
+      "type": "string"
+    },
+    "wave": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "released": {
+      "type": "boolean"
+    },
+    "contents": {
+      "type": "object"
+    },
+    "sku": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "image",
+    "thumb",
+    "wave",
+    "released",
+    "contents",
+    "sku"
+  ],
+  "additionalProperties": false
+}

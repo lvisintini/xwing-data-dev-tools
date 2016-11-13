@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://github.com/lvisintini/xwing-data/schema/conditions.json",
+  "type": "object",
+  "definitions": {},
+  "properties": {
+    "image": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "xws": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "unique": {
+      "type": "boolean"
+    },
+    "id": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    }
+  },
+  "required": [
+    "image",
+    "name",
+    "xws",
+    "text",
+    "unique",
+    "id"
+  ],
+  "additionalProperties": false
+}

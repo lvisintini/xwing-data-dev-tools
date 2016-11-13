@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://github.com/lvisintini/xwing-data/schema/pilots.json",
+  "type": "object",
+  "definitions": {},
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "id": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "unique": {
+      "type": "boolean"
+    },
+    "ship": {
+      "type": "string"
+    },
+    "skill": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "points": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "slots": {
+      "type": "array"
+    },
+    "text": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$"
+    },
+    "faction": {
+      "type": "string"
+    },
+    "xws": {
+      "type": "string"
+    },
+    "ship_override": {
+      "type": "object",
+      "properties": {
+        "attack": {
+          "description": "The ship's attack value.",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        },
+        "agility": {
+          "description": "The ship's agility value.",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        },
+        "hull": {
+          "description": "The ship's hull value.",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        },
+        "shields": {
+          "description": "The ship's shields value.",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "range": {
+      "type": "string"
+    },
+    "conditions": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "id",
+    "unique",
+    "ship",
+    "skill",
+    "points",
+    "slots",
+    "text",
+    "image",
+    "faction",
+    "xws",
+    "ship_override",
+    "range",
+    "conditions"
+  ],
+  "additionalProperties": false
+}

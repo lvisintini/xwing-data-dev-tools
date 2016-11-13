@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://github.com/lvisintini/xwing-data/schema/huge-ships.json",
+  "type": "object",
+  "definitions": {},
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The ship's name, as written on the card itself.",
+      "minLength": 1
+    },
+    "factions": {
+      "type": "array",
+      "description": "The faction (or factions) this ship belongs to.",
+      "minItems": 1,
+      "items": {
+        "$ref": "definitions.json#/faction"
+      }
+    },
+    "energy": {
+      "type": "integer",
+      "description": "The ship's energy value.",
+      "minimum": 1,
+      "exclusiveMinimum": false
+    },
+    "agility": {
+      "type": "integer",
+      "description": "The ship's agility value.",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "hull": {
+      "type": "integer",
+      "description": "The ship's hull value.",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "shields": {
+      "type": "integer",
+      "description": "The ship's shields value.",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "actions": {
+      "type": "array",
+      "description": "A list of all the actions the ship is capable.",
+      "minItems": 0,
+      "items": {
+        "$ref": "definitions.json#/action"
+      }
+    },
+    "epic_points": {
+      "type": "number",
+      "description": "The ship's epic points value, as described in the X-Wing Epic Play Tournament Rules.",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "maneuvers": {
+      "type": "array",
+      "description": "The huge ship\\s maneuvers.",
+      "maxItems": 6,
+      "minItems": 0,
+      "items": {
+        "type": "array",
+        "description": "Each element in this array contains a representation of the maneuvers available to the ship at a particular speed, determined its position in the array. ei. ship.maneuvers[1] will provide all maneuvers available to said ship at speed 1.\nThis array may be a short as required to provide accurate data, meaning that a missing speed 'index' indicates that the ship is is not capable of such speed.",
+        "maxItems": 5,
+        "minItems": 0,
+        "items": {
+          "type": "integer",
+          "description": "This array is a representation of a huge ship' maneuvers at a particular speed.\n\nEach value on this array references a different maneuver depending on its index, which maps according to the following list:\n\t0 = Left Turn\n\t1 = Left Bank\n\t2 = Straight\n\t3 = Right Bank\n\t4 = Right Turn\n\nPossible values in this array range from 0 to 1 and mean the following:\n\t0 = Maneuver unavailable\n\t1 = Maneuver maneuver available\n\nThis array may be a short as required to provide accurate data, meaning that a missing value for a particular maneuver type indicates that said maneuver is not available to that particular huge ship at that particular speed.\n.",
+          "minimum": 0,
+          "maximum": 1,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        }
+      }
+    },
+    "maneuvers_energy": {
+      "type": "array",
+      "description": "The ship\\s maneuvers energy costs.",
+      "maxItems": 6,
+      "minItems": 0,
+      "items": {
+        "type": "array",
+        "description": "Each element in this array contains a representation of the maneuver costs for the maneuvers available to the huge ship at a particular speed, determined its position in the array. ei. ``ship.maneuvers_energy[1]`` will provide all maneuver cost for the maneuvers available to the huge ship at speed 1.\nThis array's length should match the array's length of the array in the maneuvers property.\nIn other words ``ship.maneuvers.length`` should equal to ``ship.maneuvers_energy.length``",
+        "maxItems": 5,
+        "minItems": 0,
+        "items": {
+          "type": "integer",
+          "description": "This array is a representation of a huge ship' maneuvers cost at a particular speed.\n\nEach value on this array references a different maneuver depending on its index, which maps according to the following list:\n\t0 = Left Turn\n\t1 = Left Bank\n\t2 = Straight\n\t3 = Right Bank\n\t4 = Right Turn\n\nPossible values in this array range from 0 to 3 and indicate the referenced maneuver's energy cost.\n\nThis array's length should match the array's length of the array in the maneuvers property at the same speed.\nIn other words ``ship.maneuvers[2].length`` should equal to ``ship.maneuvers_energy[2].length``",
+          "minimum": 0,
+          "maximum": 3,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        }
+      }
+    },
+    "size": {
+      "description": "The ship's size.",
+      "$ref": "definitions.json#/size",
+      "pattern": "^huge$"
+    },
+    "xws": {
+      "type": "string",
+      "description": "The ships unique XWS as described in the XWS format.",
+      "minLength": 1
+    },
+    "attack": {
+      "type": "integer",
+      "description": "The ship's attack value.",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    }
+  },
+  "required": [
+    "name",
+    "factions",
+    "energy",
+    "agility",
+    "hull",
+    "shields",
+    "actions",
+    "epic_points",
+    "maneuvers",
+    "maneuvers_energy",
+    "size",
+    "xws",
+    "attack"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://github.com/lvisintini/xwing-data/schema/definitions.json",
+  "definitions": {
+    "faction": {
+      "type": "string",
+      "description": "A faction in the game.",
+      "enum": [
+        "First Order",
+        "Galactic Empire",
+        "Rebel Alliance",
+        "Resistance",
+        "Scum and Villainy"
+      ]
+    },
+    "size": {
+      "type": "string",
+      "description": "A ship size in the game",
+      "enum": [
+        "huge",
+        "large",
+        "small"
+      ]
+    },
+    "slot": {
+      "type": "string",
+      "description": "A slot type in the game.",
+      "enum": [
+        "Astromech",
+        "Bomb",
+        "Cannon",
+        "Cargo",
+        "Crew",
+        "Elite",
+        "Hardpoint",
+        "Illicit",
+        "Missile",
+        "Modification",
+        "Salvaged Astromech",
+        "System",
+        "Team",
+        "Tech",
+        "Title",
+        "Torpedo",
+        "Turret"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "description": "A action type in the game.",
+      "enum": [
+        "Barrel Roll",
+        "Boost",
+        "Cloak",
+        "Coordinate",
+        "Evade",
+        "Focus",
+        "Jam",
+        "Recover",
+        "Reinforce",
+        "Rotate Arc",
+        "SLAM",
+        "Target Lock"
+      ]
+    }
+  }
+}

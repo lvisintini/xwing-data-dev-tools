@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://github.com/lvisintini/xwing-data/schema/upgrades.json",
+  "type": "object",
+  "definitions": {},
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "id": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "slot": {
+      "type": "string"
+    },
+    "points": {
+      "type": "integer"
+    },
+    "attack": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "range": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "text": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "xws": {
+      "type": "string"
+    },
+    "unique": {
+      "type": "boolean"
+    },
+    "size": {
+      "type": "array"
+    },
+    "effect": {
+      "type": "string"
+    },
+    "faction": {
+      "type": "string"
+    },
+    "limited": {
+      "type": "boolean"
+    },
+    "energy": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "grants": {
+      "type": "array"
+    },
+    "ship": {
+      "type": "array"
+    },
+    "conditions": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "id",
+    "slot",
+    "points",
+    "attack",
+    "range",
+    "text",
+    "image",
+    "xws",
+    "unique",
+    "size",
+    "effect",
+    "faction",
+    "limited",
+    "energy",
+    "grants",
+    "ship",
+    "conditions"
+  ],
+  "additionalProperties": false
+}

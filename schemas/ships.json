@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://github.com/lvisintini/xwing-data/schema/ships.json",
+  "type": "object",
+  "definitions": {},
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The ship's name as written on the card itself.",
+      "minLength": 1
+    },
+    "factions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "definitions.json#/faction"
+      }
+    },
+    "attack": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "agility": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "hull": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "shields": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "actions": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "definitions.json#/action"
+      }
+    },
+    "maneuvers": {
+      "type": "array",
+      "description": "The huge ship\\s maneuvers.",
+      "maxItems": 6,
+      "minItems": 0,
+      "items": {
+        "type": "array",
+        "description": "Each element in this array contains a representation of the maneuvers available to the ship at a particular speed, determined its position in the array. ei. ship.maneuvers[1] will provide all maneuvers available to said ship at speed 1.\nThis array may be a short as required to provide accurate data, meaning that a missing speed 'index' indicates that the ship is is not capable of such speed.",
+        "maxItems": 10,
+        "minItems": 0,
+        "items": {
+          "type": "integer",
+          "description": "This array is a representation of a ship' maneuvers at a particular speed.\n\nEach value on this array references a different maneuver depending on its index, which maps according to the following list:\n\t0 = Left Turn\n\t1 = Left Bank\n\t2 = Straight\n\t3 = Right Bank\n\t4 = Right Turn\n\t5 = Koiogran Turn\n\t6 = Segnor's Loop Left\n\t7 = Segnor's Loop Left\n\t8 = Tallon Roll Left\n\t9 = Tallon Roll Right\n\nPossible values in this array range from 0 to 3 and mean the following:\n\t0 = Maneuver unavailable\n\t1 = White maneuver\n\t2 = Green maneuver\n\t3 = Red maneuver\n\nThis array may be a short as required to provide accurate data, meaning that a missing value for a particular maneuver type indicates that said maneuver is not available to that particular ship at that particular speed.\n.",
+          "minimum": 0,
+          "maximum": 3,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        }
+      }
+    },
+    "size": {
+      "description": "The ship's size.",
+      "$ref": "definitions.json#/size",
+      "pattern": "^(huge|small)$"
+    },
+    "xws": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "name",
+    "factions",
+    "attack",
+    "agility",
+    "hull",
+    "shields",
+    "actions",
+    "maneuvers",
+    "size",
+    "xws"
+  ],
+  "additionalProperties": false
+}
