@@ -1,42 +1,25 @@
-import json
-from collections import OrderedDict
+from .base import XWingDataNormalizer
 
 
-class XWingDataNormalizer:
-    source_key = ''
-
-    def filter(self, model):
-        raise NotImplementedError
-
-    def __init__(self):
-        self.data = []
-        self.load_data()
-        print('BEFORE --------')
-        self.analise()
-        self.normalize()
-        print('\nAFTER ---------')
-        self.analise()
-        self.save_data()
-
-    def load_data(self):
-        with open('./data/{}.js'.format(self.source_key), 'r') as file_object:
-            self.data.extend(json.load(file_object, object_pairs_hook=OrderedDict))
-
-    def save_data(self):
-        with open('./data/{}.js'.format(self.source_key), 'w') as file_object:
-            json.dump(self.data, file_object, indent=2)
-
-    def analise(self):
-        raise NotImplementedError
-
-    def normalize(self):
-        raise NotImplementedError
-
-
-class ManouverNormalizer(XWingDataNormalizer):
+class ManeuverNormalizer(XWingDataNormalizer):
     source_key = 'ships'
 
     min_maneuvers_override = 10
+
+    def __init__(self):
+        self.filtered_max_speed = 0
+        self.filtered_min_speed = 1000
+        self.max_speed = 0
+        self.min_speed = 1000
+        self.filtered_max_maneuvers = 0
+        self.filtered_min_maneuvers = 1000
+        self.max_maneuvers = 0
+        self.min_maneuvers = 1000
+        self.types = set()
+        super().__init__()
+
+    def filter(self, model):
+        raise NotImplementedError
 
     def analise(self):
         self.filtered_max_speed = 0
@@ -106,17 +89,17 @@ class ManouverNormalizer(XWingDataNormalizer):
                         ) - len(model['maneuvers'][index])))
 
 
-class SmallShipManouverNormalizer(ManouverNormalizer):
+class SmallShipManeuverNormalizer(ManeuverNormalizer):
     def filter(self, model):
         return model['size'] == 'small'
 
 
-class LargeShipManouverNormalizer(ManouverNormalizer):
+class LargeShipManeuverNormalizer(ManeuverNormalizer):
     def filter(self, model):
         return model['size'] == 'large'
 
 
-class HugeShipManouverNormalizer(ManouverNormalizer):
+class HugeShipManeuverNormalizer(ManeuverNormalizer):
     min_maneuvers_override = 5
 
     def filter(self, model):
@@ -145,9 +128,9 @@ class HugeShipManouverNormalizer(ManouverNormalizer):
 
 
 if __name__ == '__main__':
-    print('SmallShipManouverNormalizer')
-    SmallShipManouverNormalizer()
-    #print('\n\nLargeShipManouverNormalizer')
-    #LargeShipManouverNormalizer()
-    #print('\n\nHugeShipManouverNormalizer')
-    #HugeShipManouverNormalizer()
+    print('SmallShipManeuverNormalizer')
+    SmallShipManeuverNormalizer()
+    print('\n\nLargeShipManeuverNormalizer')
+    LargeShipManeuverNormalizer()
+    print('\n\nHugeShipManeuverNormalizer')
+    HugeShipManeuverNormalizer()
