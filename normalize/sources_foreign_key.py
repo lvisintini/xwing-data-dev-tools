@@ -7,8 +7,6 @@ from base import XWingDataNormalizer
 class SourcesForeignKey(XWingDataNormalizer):
     source_key = 'sources'
 
-    min_maneuvers_override = 10
-
     def __init__(self):
         self.ships = []
         with open('{}/{}.js'.format(self.root, 'ships'), 'r') as file_object:
@@ -28,6 +26,32 @@ class SourcesForeignKey(XWingDataNormalizer):
                 fks[ship_id] = qty
             model['contents']['ships'] = fks
 
+
+class SourcesForeignKey2(XWingDataNormalizer):
+    source_key = 'sources'
+
+    @staticmethod
+    def analise():
+        print('No data to show')
+
+    def normalize(self):
+        for model in self.data:
+            fks = []
+            for ship_id, qty in model['contents'].get('ships', {}).items():
+                fks.append(OrderedDict({'ship_id': int(ship_id), 'amount': qty}))
+            model['contents']['ships'] = fks
+
+            fks = []
+            for pilot_id, qty in model['contents'].get('pilots', {}).items():
+                fks.append(OrderedDict({'pilot_id': int(pilot_id), 'amount': qty}))
+            model['contents']['pilots'] = fks
+
+            fks = []
+            for upgrade_id, qty in model['contents'].get('upgrades', {}).items():
+                fks.append(OrderedDict({'upgrade_id': int(upgrade_id), 'amount': qty}))
+            model['contents']['upgrades'] = fks
+
+
 if __name__ == '__main__':
-    print('ShipsIds')
-    SourcesForeignKey()
+    print('SourcesForeignKey2')
+    SourcesForeignKey2()
