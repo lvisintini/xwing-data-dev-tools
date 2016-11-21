@@ -5,6 +5,8 @@ from base import XWingDataNormalizer
 
 
 class SourcesForeignKey(XWingDataNormalizer):
+    """Switch ship names for ids in source.contents.ships"""
+
     source_key = 'sources'
 
     def __init__(self):
@@ -28,6 +30,7 @@ class SourcesForeignKey(XWingDataNormalizer):
 
 
 class SourcesForeignKey2(XWingDataNormalizer):
+    """Change source.contents to use a better fk-like relationship"""
     source_key = 'sources'
 
     @staticmethod
@@ -38,17 +41,17 @@ class SourcesForeignKey2(XWingDataNormalizer):
         for model in self.data:
             fks = []
             for ship_id, qty in model['contents'].get('ships', {}).items():
-                fks.append(OrderedDict({'ship_id': int(ship_id), 'amount': qty}))
+                fks.append(OrderedDict([('ship_id', int(ship_id)), ('amount', qty)]))
             model['contents']['ships'] = fks
 
             fks = []
             for pilot_id, qty in model['contents'].get('pilots', {}).items():
-                fks.append(OrderedDict({'pilot_id': int(pilot_id), 'amount': qty}))
+                fks.append(OrderedDict([('pilot_id', int(pilot_id)), ('amount', qty)]))
             model['contents']['pilots'] = fks
 
             fks = []
             for upgrade_id, qty in model['contents'].get('upgrades', {}).items():
-                fks.append(OrderedDict({'upgrade_id': int(upgrade_id), 'amount': qty}))
+                fks.append(OrderedDict([('upgrade_id',int(upgrade_id)), ('amount', qty)]))
             model['contents']['upgrades'] = fks
 
 

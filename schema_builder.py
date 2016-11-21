@@ -23,7 +23,7 @@ from pprint import pprint
 # Errata up to date.
 # Card Clarifications.
 # release date
-# Wave
+# Add text for nameless pilots (pilot_hability, flavour_text)
 
 # Schema to doc
 

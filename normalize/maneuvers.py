@@ -1,10 +1,11 @@
-from .base import XWingDataNormalizer
+from base import XWingDataNormalizer
 
 
 class ManeuverNormalizer(XWingDataNormalizer):
     source_key = 'ships'
 
     min_maneuvers_override = 10
+    min_speed_override = 6
 
     def __init__(self):
         self.filtered_max_speed = 0
@@ -73,10 +74,7 @@ class ManeuverNormalizer(XWingDataNormalizer):
         for model in self.data:
             if self.filter(model):
                 if 'maneuvers' not in model:
-                    model['maneuvers'] = [
-                         [0]*max(self.filtered_max_maneuvers, self.min_maneuvers_override)
-                    ]*self.filtered_max_speed
-                    continue
+                    model['maneuvers'] = []
 
                 for index in range(len(model['maneuvers'])):
                     if len(model['maneuvers'][index]) > self.filtered_max_maneuvers:
@@ -87,6 +85,14 @@ class ManeuverNormalizer(XWingDataNormalizer):
                         model['maneuvers'][index].extend([0]*(max(
                             self.filtered_max_maneuvers, self.min_maneuvers_override
                         ) - len(model['maneuvers'][index])))
+
+                max_speed = len(model['maneuvers'])
+                if max_speed < max(self.filtered_max_speed, self.min_speed_override):
+                    model['maneuvers'].extend(
+                        [
+                         [0] * max(self.filtered_max_maneuvers, self.min_maneuvers_override)
+                        ] * (max(self.filtered_max_speed, self.min_speed_override) - max_speed)
+                    )
 
 
 class SmallShipManeuverNormalizer(ManeuverNormalizer):
@@ -101,6 +107,7 @@ class LargeShipManeuverNormalizer(ManeuverNormalizer):
 
 class HugeShipManeuverNormalizer(ManeuverNormalizer):
     min_maneuvers_override = 5
+    min_speed_override = 5
 
     def filter(self, model):
         return model['size'] == 'huge'
@@ -111,10 +118,7 @@ class HugeShipManeuverNormalizer(ManeuverNormalizer):
         for model in self.data:
             if self.filter(model):
                 if 'maneuvers' not in model:
-                    model['maneuvers_energy'] = [
-                         [0]*max(self.filtered_max_maneuvers, self.min_maneuvers_override)
-                    ]*self.filtered_max_speed
-                    continue
+                    model['maneuvers_energy'] = []
 
                 for index in range(len(model['maneuvers_energy'])):
                     if len(model['maneuvers_energy'][index]) > self.filtered_max_maneuvers:
@@ -125,6 +129,14 @@ class HugeShipManeuverNormalizer(ManeuverNormalizer):
                         model['maneuvers_energy'][index].extend([0]*(max(
                             self.filtered_max_maneuvers, self.min_maneuvers_override
                         ) - len(model['maneuvers_energy'][index])))
+
+                max_speed = len(model['maneuvers_energy'])
+                if max_speed < max(self.filtered_max_speed, self.min_speed_override):
+                    model['maneuvers_energy'].extend(
+                        [
+                         [0] * max(self.filtered_max_maneuvers, self.min_maneuvers_override)
+                        ] * (max(self.filtered_max_speed, self.min_speed_override) - max_speed)
+                    )
 
 
 if __name__ == '__main__':

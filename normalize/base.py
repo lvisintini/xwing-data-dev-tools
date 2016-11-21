@@ -24,9 +24,6 @@ class XWingDataNormalizer:
         with open('{}/{}.js'.format(self.root, self.source_key), 'w') as file_object:
             json.dump(self.data, file_object, indent=2)
 
-    def filter(self, model):
-        raise NotImplementedError
-
     def analise(self):
         raise NotImplementedError
 
