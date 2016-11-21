@@ -1,6 +1,6 @@
 # X-Wing Data dev tools
 
-These are just a collection of tools that I'm using to improve and normalize the data in
+These are just a collection of tools that I'm using to improve and normalize the data in:
 
 - https://github.com/lvisintini/xwing-data
 - https://github.com/guidokessels/xwing-data

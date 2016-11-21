@@ -28,7 +28,6 @@ from pprint import pprint
 # Schema to doc
 
 
-
 class SchemaBuilder:
     host = 'https://github.com/lvisintini/xwing-data/schema/'
     files_root = '../xwing-data/'
@@ -737,59 +736,3 @@ if __name__ == '__main__':
 
     sd.save_schema()
     #sd.print_schema()
-
-
-'''
-    def explore_models(self):
-        for model_name, model_data in self.models.items():
-            properties = self.schemas[model_name]['properties']
-            required = set(list(model_data[0].keys()))
-            for model in model_data:
-                required.intersection_update(model.keys())
-            self.schemas[model_name]['required'] = list(required)
-            self.schemas[model_name]['required'].sort()
-
-
-            for model_obj in model_data:
-                for attr, value in model_obj.items():
-                    required.add(attr)
-
-                    if attr in self.DEFINITIONS['Main']:
-                        self.actions.extend(value)
-                    if attr == 'action':
-                        self.actions.append(value)
-
-                    if attr == 'slots':
-                        slots.extend(value)
-                    if attr == 'slot':
-                        slots.append(value)
-
-                    if attr == 'factions':
-                        factions.extend(value)
-                    if attr == 'faction':
-                        factions.append(value)
-
-
-        slots = list(set(slots))
-        slots.sort()
-
-        factions = list(set(factions))
-        factions.sort()
-
-        actions = list(set(actions))
-        actions.sort()
-
-        self.schemas['Upgrades']['properties']['slot']['enum'] = slots
-        self.schemas['Pilots']['properties']['slots']['items'] = OrderedDict()
-        self.schemas['Pilots']['properties']['slots']['items']['type'] = 'string'
-        self.schemas['Pilots']['properties']['slots']['items']['enum'] = slots
-
-        self.schemas['Pilots']['properties']['faction']['enum'] = factions
-        self.schemas['Ships']['properties']['factions']['items'] = OrderedDict()
-        self.schemas['Ships']['properties']['factions']['items']['type'] = 'string'
-        self.schemas['Ships']['properties']['factions']['items']['enum'] = factions
-
-        self.schemas['Ships']['properties']['actions']['items'] = OrderedDict()
-        self.schemas['Ships']['properties']['actions']['items']['type'] = 'string'
-        self.schemas['Ships']['properties']['actions']['items']['enum'] = actions
-'''
