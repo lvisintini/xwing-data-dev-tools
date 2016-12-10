@@ -4,7 +4,7 @@ from base import XWingDataNormalizer
 class ManeuverNormalizer(XWingDataNormalizer):
     source_key = 'ships'
 
-    min_maneuvers_override = 10
+    min_maneuvers_override = 13
     min_speed_override = 6
 
     def __init__(self):

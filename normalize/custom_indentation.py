@@ -54,7 +54,7 @@ class SameLineData(XWingDataNormalizer):
             file_object.write(json.dumps(self.data, indent=2, cls=NoIndentEncoder))
 
 
-class SameLineManeuverNormalizer(XWingDataNormalizer):
+class SameLineManeuverNormalizer(SameLineData):
     source_key = 'ships'
 
     def normalize(self):
@@ -66,7 +66,7 @@ class SameLineManeuverNormalizer(XWingDataNormalizer):
                 ]
 
 
-class SameLineSourcesNormalizer(XWingDataNormalizer):
+class SameLineSourcesNormalizer(SameLineData):
     source_key = 'sources'
 
     def normalize(self):
