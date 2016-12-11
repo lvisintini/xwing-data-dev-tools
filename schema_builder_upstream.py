@@ -372,7 +372,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
             'description': 'The ship\'s name, as written on the card itself.',
             'minLength': 1,
         },
-        'factions': {
+        'faction': {
             'minItems': 1,
             'description': 'The faction (or factions) this ship belongs to.',
             'items': {
@@ -426,122 +426,92 @@ class HugeShipsBuilder(XWingSchemaBuilder):
         'maneuvers_energy': {
             'description': 'The ship\s maneuvers energy costs.',
             'maxItems': 6,
-            'minItems': 6,
+            'minItems': 0,
             'items': {
                 'description': 'Each element in this array contains a representation of the '
                                'maneuver costs for the maneuvers available to the huge ship at a '
                                'particular speed, determined its position in the array. ei. '
                                '``ship.maneuvers_energy[1]`` will provide all '
                                'maneuver cost for the maneuvers available to the huge ship at '
-                               'speed 1.',
+                               'speed 1.\n'
+                               'This array\'s length should match the array\'s length of the '
+                               'array in the maneuvers property.\n'
+                               'In other words ``ship.maneuvers.length`` should equal to '
+                               '``ship.maneuvers_energy.length``',
                 'type': 'array',
                 'maxItems': 5,
-                'minItems': 5,
-                'items': [
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s maneuver energy cost for a Left Turn maneuver',
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s maneuver energy cost for a Left Bank maneuver',
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s maneuver energy cost for a Straight maneuver',
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s maneuver energy cost for a Right Bank maneuver',
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s maneuver energy cost for a Right Turn maneuver',
-                    }
-                ],
-                'additionalItems': False,
+                'minItems': 0,
+                'items': {
+                    'description': 'This array is a representation of a huge ship\' maneuvers '
+                                   'energy cost at a particular speed.\n'
+                                   '\n'
+                                   'Each value on this array references a different maneuver '
+                                   'depending on its index, which maps according to the following '
+                                   'list:\n'
+                                   '\t0 = Left Turn\n'
+                                   '\t1 = Left Bank\n'
+                                   '\t2 = Straight\n'
+                                   '\t3 = Right Bank\n'
+                                   '\t4 = Right Turn\n'
+                                   '\n'
+                                   'Possible values in this array range from 0 to 3 and indicate '
+                                   'the referenced maneuver\'s energy cost.\n'
+                                   '\n'
+                                   'This array\'s length should match the array\'s length of the '
+                                   'array in the maneuvers property at the same speed.\n'
+                                   'In other words ``ship.maneuvers[2].length`` should equal to '
+                                   '``ship.maneuvers_energy[2].length``',
+                    'type': 'integer',
+                    'minimum': 0,
+                    'maximum': 3,
+                    "exclusiveMaximum": False,
+                    "exclusiveMinimum": False,
+                },
             },
         },
         'maneuvers': {
             'description': 'The huge ship\s maneuvers.',
             'maxItems': 6,
-            'minItems': 6,
+            'minItems': 0,
             'items': {
                 'description': 'Each element in this array contains a representation of the '
                                'maneuvers available to the ship at a particular speed, determined '
                                'its position in the array. ei. ship.maneuvers[1] will provide all '
-                               'maneuvers available to said ship at speed 1.',
+                               'maneuvers available to said ship at speed 1.\n'
+                               'This array may be a short as required to provide accurate data, '
+                               'meaning that a missing speed \'index\' indicates that the ship is '
+                               'is not capable of such speed.',
                 'type': 'array',
                 'maxItems': 5,
-                'minItems': 5,
-                'items': [
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 1,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Left Turn maneuver.\n'
-                                       '1 means the ship is capable while 0 means it is not.',
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 1,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Left Bank maneuver.\n'
-                                       '1 means the ship is capable while 0 means it is not.',
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 1,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Straight maneuver.\n'
-                                       '1 means the ship is capable while 0 means it is not.',
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 1,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Right Bank maneuver.\n'
-                                       '1 means the ship is capable while 0 means it is not.',
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 1,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Right Turn maneuver.\n'
-                                       '1 means the ship is capable while 0 means it is not.',
-                    }
-                ],
-                'additionalItems': False,
+                'minItems': 0,
+                'items': {
+                    'description': 'This array is a representation of a huge ship\' maneuvers at a '
+                                   'particular speed.\n'
+                                   '\n'
+                                   'Each value on this array references a different maneuver '
+                                   'depending on its index, which maps according to the following '
+                                   'list:\n'
+                                   '\t0 = Left Turn\n'
+                                   '\t1 = Left Bank\n'
+                                   '\t2 = Straight\n'
+                                   '\t3 = Right Bank\n'
+                                   '\t4 = Right Turn\n'
+                                   '\n'
+                                   'Possible values in this array range from 0 to 1 and mean the '
+                                   'following:\n'
+                                   '\t0 = Maneuver unavailable\n'
+                                   '\t1 = Maneuver available\n'
+                                   '\n'
+                                   'This array may be a short as required to provide accurate '
+                                   'data, meaning that a missing value for a particular maneuver '
+                                   'type indicates that said maneuver is not available to that '
+                                   'particular huge ship at that particular speed.\n.',
+                    'type': 'integer',
+                    'minimum': 0,
+                    'maximum': 1,
+                    "exclusiveMaximum": False,
+                    "exclusiveMinimum": False,
+                },
             },
         },
         'xws': {
@@ -608,7 +578,7 @@ class ShipsBuilder(XWingSchemaBuilder):
             'description': 'The ship\'s name as written on the card itself.',
             'minLength': 1,
         },
-        'factions': {
+        'faction': {
             'minItems': 1,
             'items': {
                 '$ref': 'definitions.json#/faction'
@@ -639,194 +609,56 @@ class ShipsBuilder(XWingSchemaBuilder):
         'maneuvers': {
             'description': 'The huge ship\s maneuvers.',
             'maxItems': 6,
-            'minItems': 6,
+            'minItems': 0,
             'items': {
                 'description': 'Each element in this array contains a representation of the '
                                'maneuvers available to the ship at a particular speed, determined '
                                'its position in the array. ei. ship.maneuvers[1] will provide all '
-                               'maneuvers available to said ship at speed 1.\n',
+                               'maneuvers available to said ship at speed 1.\n'
+                               'This array may be a short as required to provide accurate data, '
+                               'meaning that a missing speed \'index\' indicates that the ship is '
+                               'is not capable of such speed.',
                 'type': 'array',
                 'maxItems': 13,
                 'minItems': 0,
-                'items': [
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Left Turn maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Left Bank maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Straight maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Right Bank maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Right Turn maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Koiogran Turn maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Segnor\'s Loop Left '
-                                       'maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Segnor\'s Loop Right '
-                                       'maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Tallon Roll Left '
-                                       'maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Tallon Roll Right '
-                                       'maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Backwards Left Bank '
-                                       'maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Backwards Straight '
-                                       'maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    },
-                    {
-                        'type': 'integer',
-                        'minimum': 0,
-                        'maximum': 3,
-                        "exclusiveMaximum": False,
-                        "exclusiveMinimum": False,
-                        'description': 'The ship\'s capability of doing a Backwards Right Bank '
-                                       'maneuver.\n'
-                                       'This value ranges from 0 to 3 and mean the following:\n'
-                                       '\t0 = Maneuver unavailable\n'
-                                       '\t1 = White maneuver\n'
-                                       '\t2 = Green maneuver\n'
-                                       '\t3 = Red maneuver\n'
-                    }
-                ],
-                'additionalItems': False,
+                'items': {
+                    'description': 'This array is a representation of a ship\' maneuvers at a '
+                                   'particular speed.\n'
+                                   '\n'
+                                   'Each value on this array references a different maneuver '
+                                   'depending on its index, which maps according to the following '
+                                   'list:\n'
+                                   '\t00 = Left Turn\n'
+                                   '\t01 = Left Bank\n'
+                                   '\t02 = Straight\n'
+                                   '\t03 = Right Bank\n'
+                                   '\t04 = Right Turn\n'
+                                   '\t05 = Koiogran Turn\n'
+                                   '\t06 = Segnor\'s Loop Left\n'
+                                   '\t07 = Segnor\'s Loop Right\n'
+                                   '\t08 = Tallon Roll Left\n'
+                                   '\t09 = Tallon Roll Right\n'
+                                   '\t10 = Backwards Left Bank\n'
+                                   '\t11 = Backwards Straight\n'
+                                   '\t12 = Backwards Right Bank\n'
+                                   '\n'
+                                   'Possible values in this array range from 0 to 3 and mean the '
+                                   'following:\n'
+                                   '\t0 = Maneuver unavailable\n'
+                                   '\t1 = White maneuver\n'
+                                   '\t2 = Green maneuver\n'
+                                   '\t3 = Red maneuver\n'
+                                   '\n'
+                                   'This array may be a short as required to provide accurate '
+                                   'data, meaning that a missing value for a particular maneuver '
+                                   'type indicates that said maneuver is not available to that '
+                                   'particular ship at that particular speed.\n.',
+                    'type': 'integer',
+                    'minimum': 0,
+                    'maximum': 3,
+                    "exclusiveMaximum": False,
+                    "exclusiveMinimum": False,
+                },
             },
         },
         'xws': {

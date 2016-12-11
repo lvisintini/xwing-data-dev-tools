@@ -9,7 +9,7 @@
       "description": "The ship's name, as written on the card itself.",
       "minLength": 1
     },
-    "factions": {
+    "faction": {
       "type": "array",
       "description": "The faction (or factions) this ship belongs to.",
       "minItems": 1,
@@ -67,7 +67,7 @@
         "minItems": 0,
         "items": {
           "type": "integer",
-          "description": "This array is a representation of a huge ship' maneuvers at a particular speed.\n\nEach value on this array references a different maneuver depending on its index, which maps according to the following list:\n\t0 = Left Turn\n\t1 = Left Bank\n\t2 = Straight\n\t3 = Right Bank\n\t4 = Right Turn\n\nPossible values in this array range from 0 to 1 and mean the following:\n\t0 = Maneuver unavailable\n\t1 = Maneuver maneuver available\n\nThis array may be a short as required to provide accurate data, meaning that a missing value for a particular maneuver type indicates that said maneuver is not available to that particular huge ship at that particular speed.\n.",
+          "description": "This array is a representation of a huge ship' maneuvers at a particular speed.\n\nEach value on this array references a different maneuver depending on its index, which maps according to the following list:\n\t0 = Left Turn\n\t1 = Left Bank\n\t2 = Straight\n\t3 = Right Bank\n\t4 = Right Turn\n\nPossible values in this array range from 0 to 1 and mean the following:\n\t0 = Maneuver unavailable\n\t1 = Maneuver available\n\nThis array may be a short as required to provide accurate data, meaning that a missing value for a particular maneuver type indicates that said maneuver is not available to that particular huge ship at that particular speed.\n.",
           "minimum": 0,
           "maximum": 1,
           "exclusiveMinimum": false,
@@ -87,7 +87,7 @@
         "minItems": 0,
         "items": {
           "type": "integer",
-          "description": "This array is a representation of a huge ship' maneuvers cost at a particular speed.\n\nEach value on this array references a different maneuver depending on its index, which maps according to the following list:\n\t0 = Left Turn\n\t1 = Left Bank\n\t2 = Straight\n\t3 = Right Bank\n\t4 = Right Turn\n\nPossible values in this array range from 0 to 3 and indicate the referenced maneuver's energy cost.\n\nThis array's length should match the array's length of the array in the maneuvers property at the same speed.\nIn other words ``ship.maneuvers[2].length`` should equal to ``ship.maneuvers_energy[2].length``",
+          "description": "This array is a representation of a huge ship' maneuvers energy cost at a particular speed.\n\nEach value on this array references a different maneuver depending on its index, which maps according to the following list:\n\t0 = Left Turn\n\t1 = Left Bank\n\t2 = Straight\n\t3 = Right Bank\n\t4 = Right Turn\n\nPossible values in this array range from 0 to 3 and indicate the referenced maneuver's energy cost.\n\nThis array's length should match the array's length of the array in the maneuvers property at the same speed.\nIn other words ``ship.maneuvers[2].length`` should equal to ``ship.maneuvers_energy[2].length``",
           "minimum": 0,
           "maximum": 3,
           "exclusiveMinimum": false,
@@ -114,7 +114,7 @@
   },
   "required": [
     "name",
-    "factions",
+    "faction",
     "energy",
     "agility",
     "hull",
