@@ -81,6 +81,20 @@ class SameLineSourcesNormalizer(SameLineData):
                 NoIndent(upgrade) for upgrade in model['contents']['upgrades']
             ]
 
+            if 'conditions' in model['contents']:
+                model['contents']['conditions'] = [
+                    NoIndent(condition) for condition in model['contents']['conditions']
+                ]
+
+class SameLinePilotsNormalizer(SameLineData):
+    source_key = 'pilots'
+
+    def normalize(self):
+        for model in self.data:
+            model['ship'] = NoIndent(model['ship'])
+            if 'conditions' in model:
+                model['conditions'] = [NoIndent(cond) for cond in model['conditions']]
+
 
 if __name__ == '__main__':
     print('SameLineManeuverNormalizer')
@@ -88,3 +102,6 @@ if __name__ == '__main__':
 
     print('SameLineSourcesNormalizer')
     SameLineSourcesNormalizer()
+
+    print('SameLinePilotsNormalizer')
+    SameLinePilotsNormalizer()
