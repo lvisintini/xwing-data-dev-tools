@@ -21,11 +21,6 @@ class ForeignKeyNormalization(XWingDataNormalizer):
         print('Models with no id in fk data', [
             fkd['name'] for fkd in self.fk_data if 'id' not in fkd
         ])
-        print('FKs-------------------------------')
-        for model in self.data:
-            to_print = self.get_fk_field(model)
-            if to_print is not None:
-                print(repr(to_print))
 
     def get_fk_field(self, model):
         fk = model
@@ -135,8 +130,7 @@ class SourceContentsForeignKeyNormalization(ForeignKeyNormalization):
             self.set_fk_field(model, new_fk)
 
     def is_fk_normalized(self, fk, current_model):
-        return isinstance(fk, dict) and self.pk_name in fk and 'amount' in fk
-        #return isinstance(fk, dict) and self.pk_name in fk and 'amount' in fk and 'name' in fk
+        return isinstance(fk, dict) and self.pk_name in fk and 'amount' in fk and 'name' in fk
 
     def get_fk_model(self, fk, current_model):
         if isinstance(fk, dict) and self.pk_name in fk:
@@ -168,12 +162,11 @@ class SourceContentsForeignKeyNormalization(ForeignKeyNormalization):
         else:
             raise ValueError('fk {!r} missing amount!!'.format(fk))
 
-        return OrderedDict([(self.pk_name, fk_model['id']), ('amount', amount)])
-        #return OrderedDict([
-        #    (self.pk_name, fk_model['id']),
-        #    ('amount', amount)
-        #    ('name', fk_model['name'])
-        #])
+        return OrderedDict([
+            (self.pk_name, fk_model['id']),
+            ('amount', amount),
+            ('name', fk_model['name'])
+        ])
 
 
 class SourceShipsForeignKeyNormalization(SourceContentsForeignKeyNormalization):
@@ -265,12 +258,11 @@ class SourceShipsForeignKeyNormalization(SourceContentsForeignKeyNormalization):
         else:
             amount = self.amounts[model['id']][fk]
 
-        return OrderedDict([(self.pk_name, fk_model['id']), ('amount', amount)])
-        #return OrderedDict([
-        #    (self.pk_name, fk_model['id']),
-        #    ('amount', amount)
-        #    ('name', fk_model['name'])
-        #])
+        return OrderedDict([
+            (self.pk_name, fk_model['id']),
+            ('amount', amount),
+            ('name', fk_model['name'])
+        ])
 
 
 class SourceUpgradesForeignKeyNormalization(SourceContentsForeignKeyNormalization):
@@ -295,14 +287,14 @@ class SourcePilotsForeignKeyNormalization(SourceContentsForeignKeyNormalization)
 
 
 if __name__ == '__main__':
-    #print('SourceShipsForeignKeyNormalization')
-    #SourceShipsForeignKeyNormalization()
-    #print('SourceUpgradesForeignKeyNormalization')
-    #SourceUpgradesForeignKeyNormalization()
-    #print('SourceConditionsForeignKeyNormalization')
-    #SourceConditionsForeignKeyNormalization()
-    #print('SourcePilotsForeignKeyNormalization')
-    #SourcePilotsForeignKeyNormalization()
+    print('SourceShipsForeignKeyNormalization')
+    SourceShipsForeignKeyNormalization()
+    print('SourceUpgradesForeignKeyNormalization')
+    SourceUpgradesForeignKeyNormalization()
+    print('SourceConditionsForeignKeyNormalization')
+    SourceConditionsForeignKeyNormalization()
+    print('SourcePilotsForeignKeyNormalization')
+    SourcePilotsForeignKeyNormalization()
 
     print('PilotConditionsForeignKeyNormalization')
     PilotConditionsForeignKeyNormalization()
