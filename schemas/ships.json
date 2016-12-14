@@ -11,6 +11,7 @@
     },
     "faction": {
       "type": "array",
+      "uniqueItems": true,
       "minItems": 1,
       "items": {
         "$ref": "definitions.json#/faction"
@@ -38,6 +39,7 @@
     },
     "actions": {
       "type": "array",
+      "uniqueItems": false,
       "minItems": 0,
       "items": {
         "$ref": "definitions.json#/action"
@@ -46,11 +48,13 @@
     "maneuvers": {
       "type": "array",
       "description": "The huge ship\\s maneuvers.",
+      "uniqueItems": false,
       "maxItems": 6,
       "minItems": 0,
       "items": {
         "type": "array",
         "description": "Each element in this array contains a representation of the maneuvers available to the ship at a particular speed, determined its position in the array. ei. ship.maneuvers[1] will provide all maneuvers available to said ship at speed 1.\nThis array may be a short as required to provide accurate data, meaning that a missing speed 'index' indicates that the ship is is not capable of such speed.",
+        "uniqueItems": false,
         "maxItems": 13,
         "minItems": 0,
         "items": {

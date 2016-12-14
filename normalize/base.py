@@ -4,7 +4,6 @@ from collections import OrderedDict
 import requests
 
 
-
 class XWingDataNormalizer:
     source_key = ''
     root = '/home/lvisintini/src/xwing-data/data'

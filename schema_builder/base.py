@@ -25,16 +25,11 @@ from pprint import pprint
 
 # Schema to doc
 
-# FIXME
-# pilot.ship should be and id
-# pilot.conditions should be and id
-# conditions are not 0-indexed
-
 
 class SchemaBuilder:
     host = 'https://github.com/lvisintini/xwing-data/schema/'
     data_files_root = '/home/lvisintini/src/xwing-data/'
-    schema_files_root = '/home/lvisintini/src/xwing-data-dev-tools/'
+    schema_files_root = '/home/lvisintini/src/xwing-data-dev-tools/schemas/'
     target_key = ''
 
     local_definitions = {}

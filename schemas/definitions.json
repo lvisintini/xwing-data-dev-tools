@@ -15,7 +15,7 @@
     },
     "size": {
       "type": "string",
-      "description": "A ship size in the game",
+      "description": "A ship size in the game.",
       "enum": [
         "huge",
         "large",
