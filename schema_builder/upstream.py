@@ -298,7 +298,10 @@ class PilotsBuilder(XWingSchemaBuilder):
     target_key = 'pilots'
     fields = {
         'id': {
-            'minimum': 0,
+            'description': 'The pilot\'s unique id number. It\'s not used in the game but it\'s '
+                           'used to link this pilot to other data in this dataset.',
+            'type': 'integer',
+            'minimum': 1,
             "exclusiveMinimum": False,
         },
         'skill': {
@@ -438,7 +441,7 @@ class ShipsBuilder(XWingSchemaBuilder):
             'items': {
                 '$ref': 'definitions.json#/action'
             },
-            'uniqueItems': False,
+            'uniqueItems': True,
         },
         'attack': {
             'minimum': 0,
@@ -536,6 +539,8 @@ class SourcesBuilder(XWingSchemaBuilder):
 
     fields = {
         'id': {
+            'description': 'The source\'s unique id number. It\'s not used in the game but it\'s '
+                           'used to link this source to other data in this dataset.',
             'type': 'integer',
             'minimum': 0,
             "exclusiveMinimum": False,
@@ -549,6 +554,8 @@ class UpgradesBuilder(XWingSchemaBuilder):
 
     fields = {
         'id': {
+            'description': 'The upgrade\'s unique id number. It\'s not used in the game but it\'s '
+                           'used to link this upgrade to other data in this dataset.',
             'type': 'integer',
             'minimum': 0,
             "exclusiveMinimum": False,
@@ -562,6 +569,8 @@ class ConditionsBuilder(XWingSchemaBuilder):
 
     fields = {
         'id': {
+            'description': 'The condition\'s unique id number. It\'s not used in the game but '
+                           'it\'s used to link this condition to other data in this dataset.',
             'type': 'integer',
             'minimum': 0,
             "exclusiveMinimum": False,

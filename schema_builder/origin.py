@@ -34,7 +34,7 @@ class SharedDefinitionsBuilder(SchemaBuilder):
             'enum': [],
         },
         'size': {
-            'description': 'A ship size in the game',
+            'description': 'A ship size in the game.',
             'type': 'string',
             'enum': [],
         }
@@ -106,7 +106,7 @@ class DamageDeckBuilder(XWingSchemaBuilder):
             'minLength': 1,
         },
         'text': {
-            'description': 'The card\'s text describing it\'s effect on the target.',
+            'description': 'The card\'s text describing it\'s effect.',
             'minLength': 1,
         },
         'type': {
@@ -130,7 +130,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
             'description': 'The ship\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this ship to other data in this dataset.',
             'type': 'integer',
-            'minimum': 1,
+            'minimum': 0,
             "exclusiveMinimum": False,
         },
         'name': {
@@ -139,16 +139,18 @@ class HugeShipsBuilder(XWingSchemaBuilder):
         },
         'factions': {
             'minItems': 1,
-            'description': 'The faction (or factions) this ship belongs to.',
-            'items': {
-                '$ref': 'definitions.json#/faction'
-            },
+            'description': 'A list of factions this ship belongs to.',
             'uniqueItems': True,
+            'items': {
+                'description': 'A faction this ship belongs to.',
+                '$ref': 'definitions.json#/faction'
+            }
         },
         'actions': {
             'minItems': 0,
             'description': 'A list of all the actions the ship is capable.',
             'items': {
+                'description': 'An action this ship is capable of.',
                 '$ref': 'definitions.json#/action'
             },
             'uniqueItems': True,
@@ -194,7 +196,9 @@ class HugeShipsBuilder(XWingSchemaBuilder):
             'description': 'The ship\s maneuvers energy costs.',
             'maxItems': 6,
             'minItems': 6,
+            'uniqueItems': False,
             'items': {
+                'uniqueItems': False,
                 'description': 'Each element in this array contains a representation of the '
                                'maneuver costs for the maneuvers available to the huge ship at a '
                                'particular speed, determined its position in the array. ei. '
@@ -247,15 +251,15 @@ class HugeShipsBuilder(XWingSchemaBuilder):
                     }
                 ],
                 'additionalItems': False,
-                'uniqueItems': False,
             },
-            'uniqueItems': False,
         },
         'maneuvers': {
             'description': 'The huge ship\s maneuvers.',
             'maxItems': 6,
             'minItems': 6,
+            'uniqueItems': False,
             'items': {
+                'uniqueItems': False,
                 'description': 'Each element in this array contains a representation of the '
                                'maneuvers available to the ship at a particular speed, determined '
                                'its position in the array. ei. ship.maneuvers[1] will provide all '
@@ -311,9 +315,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
                     }
                 ],
                 'additionalItems': False,
-                "uniqueItems": False,
             },
-            "uniqueItems": False,
         },
         'xws': {
             'description': 'The ships unique XWS as described in the XWS format.',
@@ -323,7 +325,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
 
     def load_data(self):
         for key in self.source_keys:
-            with open('{}data/{}.js'.format(self.files_root, key), 'r') as file_object:
+            with open('{}data/{}.js'.format(self.data_files_root, key), 'r') as file_object:
                 unfiltered_data = json.load(file_object, object_pairs_hook=OrderedDict)
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] == 'huge'])
 
@@ -331,7 +333,6 @@ class HugeShipsBuilder(XWingSchemaBuilder):
 class PilotsBuilder(XWingSchemaBuilder):
     source_keys = ('pilots',)
     target_key = 'pilots'
-
     fields = {
         'id': {
             'description': 'The pilot\'s unique id number. It\'s not used in the game but it\'s '
@@ -386,6 +387,79 @@ class PilotsBuilder(XWingSchemaBuilder):
         'image': {
             'minLength': 1,
             'pattern': '^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$'
+        },
+        'xws': {
+            'description': 'The pilots unique XWS as described in the XWS format.',
+            'minLength': 1,
+        },
+        'text': {
+            'description': 'The card\'s text describing it\'s effect.',
+            'minLength': 1,
+        },
+        'faction': {
+            'description': 'The pilot\'s faction.',
+            '$ref': 'definitions.json#/faction'
+        },
+        'conditions': {
+            'description': 'The pilot\'s related conditions.',
+            'items': {
+                'type': 'object',
+		'properties': {
+		    'conditions_id': {
+                        'type': 'integer'
+                    },
+		},
+		'required': [],
+            	'additionalProperties': False,
+            },
+            'uniqueItems': True,
+        },
+        'slots': {
+            'description': 'A list of the slots available to this pilot.',
+            'items': {
+                'description': 'A slot available to this ship.',
+                '$ref': 'definitions.json#/slots'
+            },
+            'uniqueItems': False,
+        },
+        'ship': {
+            'description': 'The pilot\'s ship name.',
+            'type': 'string',
+            'minLength': 1,
+        },
+        'points': {
+            'description': 'This pilot\'s squad points cost.',
+            'anyOf': [
+                {
+                    'description': 'Squad points cost.',
+                    'type': 'integer',
+                    'minimum': 1,
+                    "exclusiveMinimum": False,
+                },
+                {
+                    'description': 'Having \'?\' as a pilot\'s squad points cost means that '
+                                   'there is a special ruling for them an they are variable.',
+                    'pattern': '^\?$',
+                    'type': 'string',
+                    'minLength': 1,
+                    'maxLength': 1,
+                }
+            ]
+        },
+        'name': {
+            'description': 'The pilot\'s name, as written on the card itself.',
+            'minLength': 1,
+        },
+        'unique': {
+            'type': "boolean",
+            'description': 'This value indicates whether this pilot is unique or not, as '
+                           'indicated by a black dot next to pilot\'s name in the card (if '
+                           'unique).',
+        },
+        'range': {
+            'type': 'string',
+            'description': 'The ship\s range. This property is for huge ships only.',
+            'pattern': '^[0-9]-[0-9]$',
         }
     }
 
@@ -433,7 +507,9 @@ class ShipsBuilder(XWingSchemaBuilder):
             'description': 'The huge ship\s maneuvers.',
             'maxItems': 6,
             'minItems': 6,
+            'uniqueItems': False,
             'items': {
+                'uniqueItems': False,
                 'description': 'Each element in this array contains a representation of the '
                                'maneuvers available to the ship at a particular speed, determined '
                                'its position in the array. ei. ship.maneuvers[1] will provide all '
@@ -620,9 +696,7 @@ class ShipsBuilder(XWingSchemaBuilder):
                     }
                 ],
                 'additionalItems': False,
-                'uniqueItems': False,
             },
-            'uniqueItems': False,
         },
         'xws': {
             'minLength': 1,
@@ -636,7 +710,7 @@ class ShipsBuilder(XWingSchemaBuilder):
 
     def load_data(self):
         for key in self.source_keys:
-            with open('{}data/{}.js'.format(self.files_root, key), 'r') as file_object:
+            with open('{}data/{}.js'.format(self.data_files_root, key), 'r') as file_object:
                 unfiltered_data = json.load(file_object, object_pairs_hook=OrderedDict)
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] != 'huge'])
 
@@ -650,7 +724,7 @@ class SourcesBuilder(XWingSchemaBuilder):
             'description': 'The source\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this source to other data in this dataset.',
             'type': 'integer',
-            'minimum': 1,
+            'minimum': 0,
             "exclusiveMinimum": False,
         },
     }
@@ -665,7 +739,7 @@ class UpgradesBuilder(XWingSchemaBuilder):
             'description': 'The upgrade\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this upgrade to other data in this dataset.',
             'type': 'integer',
-            'minimum': 1,
+            'minimum': 0,
             "exclusiveMinimum": False,
         },
     }
@@ -680,7 +754,7 @@ class ConditionsBuilder(XWingSchemaBuilder):
             'description': 'The condition\'s unique id number. It\'s not used in the game but '
                            'it\'s used to link this condition to other data in this dataset.',
             'type': 'integer',
-            'minimum': 1,
+            'minimum': 0,
             "exclusiveMinimum": False,
         },
         'image': {
