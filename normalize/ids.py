@@ -31,65 +31,45 @@ class AddModelIds(MemoryLoader, XWingDataNormalizer):
                 if model['name'] in self.memory:
                     model['id'] = self.memory[model['name']]
                 else:
-                    auto_increment_value += 1
                     model['id'] = auto_increment_value
+                    auto_increment_value += 1
 
 
-class ConditionsOneBasedIds(MemoryLoader, MultipleXWingDataNormalizer):
-    source_keys = ['conditions', 'sources', 'pilots']
-    #memory_url = 'https://raw.githubusercontent.com/lvisintini/xwing-data/master/data/conditions.js'
+class RefreshIdsUsingNames(MultipleXWingDataNormalizer):
+    source_keys = ['pilots', 'ships', 'sources', 'conditions', 'upgrades']
 
-    def analise(self):
-        ids = [model['id'] for model in self.data['conditions'] if 'id' in model]
-        self.max_id = max(*ids)
-        self.min_id = min(*ids)
-        print('Memory', self.memory)
-        print('Memory length', len(self.memory))
-        print('Max id', self.max_id)
-        print('Min id', self.min_id)
-        print('Without id', len([model for model in self.data if 'id' not in model]))
-        print('Qty', len(self.data))
+    @staticmethod
+    def analise():
+        print('Nothing to print')
 
     def normalize(self):
-        if self.min_id is None:
-            raise ValueError('Models have no ids')
+        # FIXME: Get all models by name and pop them out, assume FIFO
+        for model in self.data['pilots']:
+            fk_model = next((m for m in self.data['ships'] if m['name'] == model['ship']['name']))
+            model['ship']['ship_id'] = fk_model['id']
 
-        mapping = []
+            if 'conditions' in model:
+                for fk in model['conditions']:
+                    fk_model = next((m for m in self.data['conditions'] if m['name'] == fk['name']))
+                    fk['condition_id'] = fk_model['id']
 
-        if self.min_id == 0:
-            for model in self.data['conditions']:
-                old_id = model['id']
-                if model['name'] in self.memory:
-                    new_id = self.memory[model['name']]
-                    model['id'] = self.memory[model['name']]
-                    mapping.append((old_id, new_id))
-                else:
-                    new_id = model['id'] + 1
-                    model['id'] = new_id
-                    mapping.append((old_id, new_id))
+        for model in self.data['sources']:
+            if 'conditions' in model['contents']:
+                for fk in model['contents']['conditions']:
+                    fk_model = next((m for m in self.data['conditions'] if m['name'] == fk['name']))
+                    fk['condition_id'] = fk_model['id']
 
-            mapping = dict(mapping)
+            for fk in model['contents']['ships']:
+                fk_model = next((m for m in self.data['ships'] if m['name'] == fk['name']))
+                fk['ship_id'] = fk_model['id']
 
-            for model in self.data['sources']:
-                if 'conditions' in model['contents']:
-                    if isinstance(model['contents']['conditions'], dict):
-                        keys = list(model['contents']['conditions'].keys())
-                        values = list(model['contents']['conditions'].values())
-                        for i in range(len(keys)):
-                            keys[i] = str(mapping[int(keys[i])])
-                        model['contents']['conditions'] = OrderedDict(zip(keys, values))
+            for fk in model['contents']['pilots']:
+                fk_model = next((m for m in self.data['pilots'] if m['name'] == fk['name']))
+                fk['pilot_id'] = fk_model['id']
 
-                    elif isinstance(model['contents']['conditions'], list):
-                        for fk in model['contents']['conditions']:
-                            fk['condition_id'] = mapping[fk['condition_id']]
-                    else:
-                        raise ValueError('DATA ERROR!!')
-
-            for model in self.data['pilots']:
-                if 'conditions' in model:
-                    if all([isinstance(c, dict) for c in model['conditions']]):
-                        for fk in model['conditions']:
-                            fk['condition_id'] = mapping[fk['condition_id']]
+            for fk in model['contents']['upgrades']:
+                fk_model = next((m for m in self.data['upgrades'] if m['name'] == fk['name']))
+                fk['upgrade_id'] = fk_model['id']
 
 
 class AddShipsIds(AddModelIds):
@@ -101,5 +81,5 @@ if __name__ == '__main__':
     print('AddShipsIds')
     AddShipsIds()
 
-    print('ConditionsOneBasedIds')
-    ConditionsOneBasedIds()
+    print('RefreshIdsUsingNames')
+    RefreshIdsUsingNames()

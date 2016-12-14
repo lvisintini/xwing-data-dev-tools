@@ -51,7 +51,9 @@ class SameLineData(XWingDataNormalizer):
 
     def save_data(self):
         with open('{}/{}.js'.format(self.root, self.source_key), 'w') as file_object:
-            file_object.write(json.dumps(self.data, indent=2, cls=NoIndentEncoder))
+            file_object.write(
+                json.dumps(self.data, indent=2, cls=NoIndentEncoder, ensure_ascii=False)
+            )
 
 
 class SameLineManeuverNormalizer(SameLineData):
@@ -86,12 +88,22 @@ class SameLineSourcesNormalizer(SameLineData):
                     NoIndent(condition) for condition in model['contents']['conditions']
                 ]
 
+
 class SameLinePilotsNormalizer(SameLineData):
     source_key = 'pilots'
 
     def normalize(self):
         for model in self.data:
             model['ship'] = NoIndent(model['ship'])
+            if 'conditions' in model:
+                model['conditions'] = [NoIndent(cond) for cond in model['conditions']]
+
+
+class SameLineUpgradesNormalizer(SameLineData):
+    source_key = 'upgrades'
+
+    def normalize(self):
+        for model in self.data:
             if 'conditions' in model:
                 model['conditions'] = [NoIndent(cond) for cond in model['conditions']]
 
@@ -105,3 +117,6 @@ if __name__ == '__main__':
 
     print('SameLinePilotsNormalizer')
     SameLinePilotsNormalizer()
+
+    print('SameLineUpgradesNormalizer')
+    SameLineUpgradesNormalizer()

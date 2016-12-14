@@ -286,6 +286,24 @@ class SourcePilotsForeignKeyNormalization(SourceContentsForeignKeyNormalization)
     pk_name = 'pilot_id'
 
 
+class UpgradeConditionsForeignKeyNormalization(SimpleForeignKeyNormalization):
+    source_key = 'upgrades'
+    fk_source_key = 'conditions'
+    fk_field_path = ['conditions', ]
+    pk_name = 'condition_id'
+
+    def normalize(self):
+        for model in self.data:
+            current_fk_field = self.get_fk_field(model)
+            if current_fk_field is None:
+                continue
+
+            new_fk = []
+            for fk in current_fk_field:
+                new_fk.append(self.construct_new_fk(fk, model))
+
+            self.set_fk_field(model, new_fk)
+
 if __name__ == '__main__':
     print('SourceShipsForeignKeyNormalization')
     SourceShipsForeignKeyNormalization()
@@ -295,6 +313,9 @@ if __name__ == '__main__':
     SourceConditionsForeignKeyNormalization()
     print('SourcePilotsForeignKeyNormalization')
     SourcePilotsForeignKeyNormalization()
+
+    print('UpgradeConditionsForeignKeyNormalization')
+    UpgradeConditionsForeignKeyNormalization()
 
     print('PilotConditionsForeignKeyNormalization')
     PilotConditionsForeignKeyNormalization()
