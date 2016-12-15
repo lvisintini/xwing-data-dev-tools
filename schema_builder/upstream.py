@@ -15,6 +15,7 @@ class SharedDefinitionsBuilder(SchemaBuilder):
         'slot': 'slot',
         'slots': 'slot',
         'size': 'size',
+        'image': 'file_path',
     }
 
     definition_fields = {
@@ -37,6 +38,14 @@ class SharedDefinitionsBuilder(SchemaBuilder):
             'description': 'A ship size in the game.',
             'type': 'string',
             'enum': [],
+        },
+        'file_path': {
+            'description': 'A file path',
+            'type': 'string',
+            'pattern': '^[a-zA-Z0-9_-]([a-zA-Z0-9\ _-]*[a-zA-Z0-9\ _-])?(\/[a-zA-Z0-9_-]'
+                       '([a-zA-Z0-9\ _-]*[a-zA-Z0-9\ _-])?)*\.[a-z0-9]{3}$'
+            # https://regex101.com/r/0Tt5mC/1 for tests
+            # https://regex101.com/delete/FId7doiOjHil897MHkZ1012h to delete
         }
     }
 
@@ -47,6 +56,7 @@ class SharedDefinitionsBuilder(SchemaBuilder):
             'size',
             'slot',
             'action',
+            'file_path'
         ]
         self.build_schema()
 
@@ -77,13 +87,14 @@ class SharedDefinitionsBuilder(SchemaBuilder):
 
     def add_definition_data(self, attr, enum):
         if attr in self.definition_mapping:
-            definition_enum = self.definitions[self.definition_mapping[attr]]['enum']
-            if enum.__class__ == list:
-                definition_enum.extend(enum)
-            else:
-                definition_enum.append(enum)
-            self.definitions[self.definition_mapping[attr]]['enum'] = list(set(definition_enum))
-            self.definitions[self.definition_mapping[attr]]['enum'].sort()
+            if 'enum' in self.definitions[self.definition_mapping[attr]]:
+                definition_enum = self.definitions[self.definition_mapping[attr]]['enum']
+                if enum.__class__ == list:
+                    definition_enum.extend(enum)
+                else:
+                    definition_enum.append(enum)
+                self.definitions[self.definition_mapping[attr]]['enum'] = list(set(definition_enum))
+                self.definitions[self.definition_mapping[attr]]['enum'].sort()
 
     @property
     def definitions(self):
@@ -106,7 +117,7 @@ class DamageDeckBuilder(XWingSchemaBuilder):
             'minLength': 1,
         },
         'text': {
-            'description': 'The card\'s text describing it\'s effect.',
+            'description': 'The card\'s text describing its effect.',
             'minLength': 1,
         },
         'type': {
@@ -141,7 +152,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
         },
         'actions': {
             'minItems': 0,
-            'description': 'A list of all the actions the ship is capable.',
+            'description': 'A list of all the actions the ship is capable of.',
             'items': {
                 'description': 'An action this ship is capable of.',
                 '$ref': 'definitions.json#/action'
@@ -281,7 +292,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
             },
         },
         'xws': {
-            'description': 'The ships unique XWS as described in the XWS format.',
+            'description': 'The ship\'s unique XWS id as described in the XWS format.',
             'minLength': 1,
         },
     }
@@ -305,8 +316,10 @@ class PilotsBuilder(XWingSchemaBuilder):
             "exclusiveMinimum": False,
         },
         'skill': {
+            'description': 'The pilot\'s skill.',
             'anyOf': [
                 {
+                    'description': 'Pilot skill.',
                     'type': 'integer',
                     'minimum': 0,
                     'maximum': 9,
@@ -314,6 +327,8 @@ class PilotsBuilder(XWingSchemaBuilder):
                     "exclusiveMinimum": False,
                 },
                 {
+                    'description': 'Having \'?\' as a pilot\'s skill means that there is a '
+                                   'special ruling for it and it\'s variable.',
                     'pattern': '^\?$',
                     'type': 'string',
                     'minLength': 1,
@@ -322,6 +337,10 @@ class PilotsBuilder(XWingSchemaBuilder):
             ]
         },
         'ship_override': {
+            'description': 'Most times, ships attributes remain the same for all its pilot '
+                           'cards.\n'
+                           'When they don\'t, this attribute is used to reflect those changes.\n'
+                           'The values here supersede the ones provided by pilot\'s ship values. ',
             'properties': {
                 'attack': {
                     'description': 'The ship\'s attack value.',
@@ -348,15 +367,15 @@ class PilotsBuilder(XWingSchemaBuilder):
             'additionalProperties': False,
         },
         'image': {
-            'minLength': 1,
-            'pattern': '^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$'
+            'description': 'The file path for this pilot card\'s image.',
+            '$ref': 'definitions.json#/file_path',
         },
         'xws': {
-            'description': 'The pilots unique XWS as described in the XWS format.',
+            'description': 'The pilot\'s unique XWS id as described in the XWS format.',
             'minLength': 1,
         },
         'text': {
-            'description': 'The card\'s text describing it\'s effect.',
+            'description': 'The pilot card\'s text describing its effect.',
             'minLength': 1,
         },
         'faction': {
@@ -366,6 +385,7 @@ class PilotsBuilder(XWingSchemaBuilder):
         'conditions': {
             'description': 'The pilot\'s related conditions.',
             'items': {
+                'description': 'A condition name.',
                 'type': 'string',
             },
             'uniqueItems': True,
@@ -394,7 +414,7 @@ class PilotsBuilder(XWingSchemaBuilder):
                 },
                 {
                     'description': 'Having \'?\' as a pilot\'s squad points cost means that '
-                                   'there is a special ruling for them an they are variable.',
+                                   'there is a special ruling for it and it\'s variable.',
                     'pattern': '^\?$',
                     'type': 'string',
                     'minLength': 1,
@@ -408,9 +428,10 @@ class PilotsBuilder(XWingSchemaBuilder):
         },
         'unique': {
             'type': "boolean",
-            'description': 'This value indicates whether this pilot is unique or not, as '
-                           'indicated by a black dot next to pilot\'s name in the card (if '
-                           'unique).',
+            'description': 'Some pilot cards have unique names, which are '
+                           'identified by the bullet to the left of the name.\n'
+                           'A player cannot field two or more cards that share the same unique '
+                           'name, even if those cards are of different types.'
         },
         'range': {
             'type': 'string',
@@ -430,32 +451,40 @@ class ShipsBuilder(XWingSchemaBuilder):
             'minLength': 1,
         },
         'faction': {
+            'description': 'A list of factions this ship belongs to.',
             'minItems': 1,
             'items': {
+                'description': 'A faction this ship belongs to.',
                 '$ref': 'definitions.json#/faction'
             },
             'uniqueItems': True,
         },
         'actions': {
+            'description': 'A list of all the actions the ship is capable of.',
             'minItems': 0,
             'items': {
+                'description': 'A list of all the actions the ship is capable of.',
                 '$ref': 'definitions.json#/action'
             },
             'uniqueItems': True,
         },
         'attack': {
+            'description': 'The ship\'s attack value.',
             'minimum': 0,
             "exclusiveMinimum": False,
         },
         "agility": {
+            'description': 'The ship\'s agility value.',
             "minimum": 0,
             "exclusiveMinimum": False,
         },
         "hull": {
+            'description': 'The ship\'s hull value.',
             "minimum": 0,
             "exclusiveMinimum": False,
         },
         "shields": {
+            'description': 'The ship\'s shields value.',
             "minimum": 0,
             "exclusiveMinimum": False,
         },
@@ -517,6 +546,7 @@ class ShipsBuilder(XWingSchemaBuilder):
             },
         },
         'xws': {
+            'description': 'The ship\'s unique XWS id as described in the XWS format.',
             'minLength': 1,
         },
         'size': {
@@ -545,6 +575,90 @@ class SourcesBuilder(XWingSchemaBuilder):
             'minimum': 0,
             "exclusiveMinimum": False,
         },
+        'sku': {
+            'description': 'Fantasy Flight Games unique product key for this particular source.',
+            'pattern': '^SWX[0-9]+$',
+            'minLength': 1,
+        },
+        'wave': {
+            'description': 'The sources wave (or product line).',
+            'anyOf': [
+                {
+                    'description': 'Wave number. This value is usually presented in roman numerals '
+                                   'but here is presented in arabic numerals.',
+                    'type': 'integer',
+                    'minimum': 1,
+                    "exclusiveMinimum": False,
+                },
+                {
+                    'description': 'Some sources are not grouped under particular wave, but under '
+                                   'a particular product line.\n'
+                                   'When that\s the case, use text fot that type.',
+                    'type': 'string',
+                    'minLength': 1,
+                }
+            ]
+        },
+        'name': {
+            'description': 'The source\'s name as written on the package.',
+            'minLength': 1,
+        },
+        'image': {
+            'description': 'The file path for this source\'s image.',
+            '$ref': 'definitions.json#/file_path',
+        },
+        'thumb': {
+            'description': 'The file path for this source\'s thumbnail.',
+            '$ref': 'definitions.json#/file_path',
+        },
+        'contents': {
+            "type": "object",
+            'description': 'The sources contents',
+            'properties': {
+                'ships': {
+                    'description': 'The ships included in this source.',
+                    "type": "array",
+                    'uniqueItems': True,
+                    "items": {
+                        'type': 'string',
+                        'description': 'A ship\'s name.'
+                    }
+                },
+                "pilots": {
+                    "type": "object",
+                    'description': 'The pilots included in this source.\n'
+                                   'The object property names (casted as integers) are the ids '
+                                   'of the upgrades included.\n'
+                                   'Their corresponding integer values indicate how many of those '
+                                   'pilots are included in the source.',
+                    'additionalProperties': True,
+                },
+                "upgrades": {
+                    "type": "object",
+                    'description': 'The upgrades included in this source.\n'
+                                   'The object property names (casted as integers) are the ids '
+                                   'of the upgrades included.\n'
+                                   'Their corresponding integer values indicate how many of those '
+                                   'upgrades are included in the source.',
+                    'additionalProperties': True,
+                },
+                "conditions": {
+                    "type": "object",
+                    'description': 'The conditions included in this source.\n'
+                                   'The object property names (casted as integers) are the ids '
+                                   'of the conditions included.\n'
+                                   'Their corresponding integer values indicate how many of those '
+                                   'conditions are included in the source.',
+                    'additionalProperties': True,
+                },
+            },
+            'required': ['ships', 'pilots', 'upgrades'],
+            'additionalProperties': False,
+        },
+        'released': {
+            'type': "boolean",
+            'description': 'This value indicates whether this sources has been released or not',
+        }
     }
 
 
@@ -559,6 +673,13 @@ class UpgradesBuilder(XWingSchemaBuilder):
             'type': 'integer',
             'minimum': 0,
             "exclusiveMinimum": False,
+        },
+        'unique': {
+            'type': "boolean",
+            'description': 'Some upgrade cards have unique names, which are '
+                           'identified by the bullet to the left of the name.\n '
+                           'A player cannot field two or more cards that share the same unique '
+                           'name, even if those cards are of different types.'
         },
     }
 
@@ -576,8 +697,27 @@ class ConditionsBuilder(XWingSchemaBuilder):
             "exclusiveMinimum": False,
         },
         'image': {
+            'description': 'The file path for this condition card\'s image.',
+            '$ref': 'definitions.json#/file_path',
+        },
+        'name': {
+            'description': 'The conditions\'s name as written on the package.',
             'minLength': 1,
-            'pattern': '^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$'
+        },
+        'text': {
+            'description': 'The condition card\'s text describing its effect.',
+            'minLength': 1,
+        },
+        'unique': {
+            'type': "boolean",
+            'description': 'Some condition cards have unique names, which are '
+                           'identified by the bullet to the left of the name.\n '
+                           'A player cannot field two or more cards that share the same unique '
+                           'name, even if those cards are of different types.'
+        },
+        'xws': {
+            'description': 'The conditions\'s unique XWS id as described in the XWS format.',
+            'minLength': 1,
         }
     }
 

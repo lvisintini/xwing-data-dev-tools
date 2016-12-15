@@ -11,37 +11,45 @@
     },
     "faction": {
       "type": "array",
+      "description": "A list of factions this ship belongs to.",
       "uniqueItems": true,
       "minItems": 1,
       "items": {
+        "description": "A faction this ship belongs to.",
         "$ref": "definitions.json#/faction"
       }
     },
     "attack": {
       "type": "integer",
+      "description": "The ship's attack value.",
       "minimum": 0,
       "exclusiveMinimum": false
     },
     "agility": {
       "type": "integer",
+      "description": "The ship's agility value.",
       "minimum": 0,
       "exclusiveMinimum": false
     },
     "hull": {
       "type": "integer",
+      "description": "The ship's hull value.",
       "minimum": 0,
       "exclusiveMinimum": false
     },
     "shields": {
       "type": "integer",
+      "description": "The ship's shields value.",
       "minimum": 0,
       "exclusiveMinimum": false
     },
     "actions": {
       "type": "array",
-      "uniqueItems": false,
+      "description": "A list of all the actions the ship is capable of.",
+      "uniqueItems": true,
       "minItems": 0,
       "items": {
+        "description": "A list of all the actions the ship is capable of.",
         "$ref": "definitions.json#/action"
       }
     },
@@ -74,6 +82,7 @@
     },
     "xws": {
       "type": "string",
+      "description": "The ship's unique XWS id as described in the XWS format.",
       "minLength": 1
     }
   },

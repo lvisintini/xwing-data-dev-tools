@@ -11,12 +11,13 @@
     },
     "id": {
       "type": "integer",
-      "minimum": 0,
+      "description": "The pilot's unique id number. It's not used in the game but it's used to link this pilot to other data in this dataset.",
+      "minimum": 1,
       "exclusiveMinimum": false
     },
     "unique": {
       "type": "boolean",
-      "description": "This value indicates whether this pilot is unique or not, as indicated by a black dot next to pilot's name in the card (if unique)."
+      "description": "Some pilot cards have unique names, which are identified by the bullet to the left of the name.\nA player cannot field two or more cards that share the same unique name, even if those cards are of different types."
     },
     "ship": {
       "type": "string",
@@ -24,9 +25,11 @@
       "minLength": 1
     },
     "skill": {
+      "description": "The pilot's skill.",
       "anyOf": [
         {
           "type": "integer",
+          "description": "Pilot skill.",
           "minimum": 0,
           "maximum": 9,
           "exclusiveMinimum": false,
@@ -34,6 +37,7 @@
         },
         {
           "type": "string",
+          "description": "Having '?' as a pilot's skill means that there is a special ruling for it and it's variable.",
           "minLength": 1,
           "maxLength": 1,
           "pattern": "^\\?$"
@@ -51,7 +55,7 @@
         },
         {
           "type": "string",
-          "description": "Having '?' as a pilot's squad points cost means that there is a special ruling for them an they are variable.",
+          "description": "Having '?' as a pilot's squad points cost means that there is a special ruling for it and it's variable.",
           "minLength": 1,
           "maxLength": 1,
           "pattern": "^\\?$"
@@ -69,13 +73,12 @@
     },
     "text": {
       "type": "string",
-      "description": "The card's text describing it's effect.",
+      "description": "The pilot card's text describing its effect.",
       "minLength": 1
     },
     "image": {
-      "type": "string",
-      "minLength": 1,
-      "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$"
+      "description": "The file path for this pilot card's image.",
+      "$ref": "definitions.json#/file_path"
     },
     "faction": {
       "description": "The pilot's faction.",
@@ -83,11 +86,12 @@
     },
     "xws": {
       "type": "string",
-      "description": "The pilots unique XWS as described in the XWS format.",
+      "description": "The pilot's unique XWS id as described in the XWS format.",
       "minLength": 1
     },
     "ship_override": {
       "type": "object",
+      "description": "Most times, ships attributes remain the same for all its pilot cards.\nWhen they don't, this attribute is used to reflect those changes.\nThe values here supersede the ones provided by pilot's ship values. ",
       "properties": {
         "attack": {
           "description": "The ship's attack value.",
@@ -123,25 +127,19 @@
       "description": "The pilot's related conditions.",
       "uniqueItems": true,
       "items": {
-        "type": "string"
+        "type": "string",
+        "description": "A condition name."
       }
     }
   },
   "required": [
     "name",
     "id",
-    "unique",
     "ship",
     "skill",
     "points",
-    "slots",
-    "text",
-    "image",
     "faction",
-    "xws",
-    "ship_override",
-    "range",
-    "conditions"
+    "xws"
   ],
   "additionalProperties": false
 }

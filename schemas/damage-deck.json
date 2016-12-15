@@ -25,7 +25,7 @@
     },
     "text": {
       "type": "string",
-      "description": "The card's text describing it's effect.",
+      "description": "The card's text describing its effect.",
       "minLength": 1
     }
   },

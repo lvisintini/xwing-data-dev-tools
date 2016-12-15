@@ -45,7 +45,7 @@
     },
     "actions": {
       "type": "array",
-      "description": "A list of all the actions the ship is capable.",
+      "description": "A list of all the actions the ship is capable of.",
       "uniqueItems": true,
       "minItems": 0,
       "items": {
@@ -110,7 +110,7 @@
     },
     "xws": {
       "type": "string",
-      "description": "The ships unique XWS as described in the XWS format.",
+      "description": "The ship's unique XWS id as described in the XWS format.",
       "minLength": 1
     },
     "attack": {
@@ -123,7 +123,6 @@
   "required": [
     "name",
     "faction",
-    "energy",
     "agility",
     "hull",
     "shields",
@@ -132,8 +131,7 @@
     "maneuvers",
     "maneuvers_energy",
     "size",
-    "xws",
-    "attack"
+    "xws"
   ],
   "additionalProperties": false
 }

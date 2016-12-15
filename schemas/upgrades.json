@@ -9,6 +9,7 @@
     },
     "id": {
       "type": "integer",
+      "description": "The upgrade's unique id number. It's not used in the game but it's used to link this upgrade to other data in this dataset.",
       "minimum": 0,
       "exclusiveMinimum": false
     },
@@ -40,7 +41,8 @@
       "type": "string"
     },
     "unique": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Some upgrade cards have unique names, which are identified by the bullet to the left of the name.\n A player cannot field two or more cards that share the same unique name, even if those cards are of different types."
     },
     "size": {
       "type": "array"
@@ -73,22 +75,9 @@
   "required": [
     "name",
     "id",
-    "slot",
     "points",
-    "attack",
-    "range",
     "text",
-    "image",
-    "xws",
-    "unique",
-    "size",
-    "effect",
-    "faction",
-    "limited",
-    "energy",
-    "grants",
-    "ship",
-    "conditions"
+    "xws"
   ],
   "additionalProperties": false
 }

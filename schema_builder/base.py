@@ -20,8 +20,9 @@ from pprint import pprint
 # Mark cards with errata.
 # Errata up to date.
 # Card Clarifications.
-# release date
+# source.release date
 # Add text for nameless pilots (pilot_hability, flavour_text)
+# product line and wave number instead of wave
 
 # Schema to doc
 
@@ -175,11 +176,9 @@ class XWingSchemaBuilder(SchemaBuilder):
                 self.data.extend(json.load(file_object, object_pairs_hook=OrderedDict))
 
     def gather_required(self):
-        required = []
+        required = list(self.data[0].keys())
         for model in self.data:
-            for attr in model.keys():
-                if attr not in required:
-                    required.append(attr)
+            required = [r for r in required if r in model]
         self.required = required
 
     def print_properties(self):
@@ -188,6 +187,53 @@ class XWingSchemaBuilder(SchemaBuilder):
         pprint(self.properties)
         print('fields not in properties', set(self.fields.keys()).difference(self.properties.keys()))
         print('properties not in fields', set(self.properties.keys()).difference(self.fields.keys()))
+
+        no_descriptions = []
+        no_unique_items = []
+        for new_p, new_d in self.properties.items():
+                no_descriptions.extend(self.check_descriptions(new_p, new_d))
+                no_unique_items.extend(self.check_unique_items(new_p, new_d))
+        print('No descriptions for:', no_descriptions)
+        print('No unique items for:', no_unique_items)
+
+    def check_descriptions(self, p, d):
+        no_descriptions = []
+
+        if isinstance(d, dict):
+            if 'description' not in d and p != 'properties':
+                no_descriptions.append(p)
+
+            for new_p, new_d in [t for t in d.items() if isinstance(t[1], dict)]:
+                no_descriptions.extend(self.check_descriptions(new_p, new_d))
+
+            for new_p, a_list in [t for t in d.items() if isinstance(t[1], list)]:
+                for i in range(len(a_list)):
+                    new_d = a_list[i]
+                    if isinstance(new_d, dict):
+                        new_p = '{}[{}]'.format(p, i)
+                        no_descriptions.extend(self.check_descriptions(new_p, new_d))
+
+        return no_descriptions
+
+    def check_unique_items(self, p, d):
+        no_unique_items = []
+
+        if isinstance(d, dict):
+            if 'items' in d and 'uniqueItems' not in d:
+                no_unique_items.append(p)
+
+            for new_p, new_d in [t for t in d.items() if isinstance(t[1], dict)]:
+                no_unique_items.extend(self.check_unique_items(new_p, new_d))
+
+            for new_p, a_list in [t for t in d.items() if isinstance(t[1], list)]:
+                for i in range(len(a_list)):
+                    new_d = a_list[i]
+                    if isinstance(new_d, dict):
+                        new_p = '{}[{}]'.format(p, i)
+                        no_unique_items.extend(self.check_unique_items(new_p, new_d))
+
+        return no_unique_items
+
 
     def gather_definitions(self):
         for model in self.data:
