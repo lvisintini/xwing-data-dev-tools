@@ -11,7 +11,6 @@ class UpStreamHostMixin:
 class SharedDefinitionsBuilder(UpStreamHostMixin, SchemaBuilder):
     target_key = 'definitions'
 
-
     definition_mapping = {
         'faction': 'faction',
         'factions': 'faction',
