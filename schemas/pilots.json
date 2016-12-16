@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://github.com/lvisintini/xwing-data/schema/pilots.json",
+  "id": "https://github.com/guidokessels/xwing-data/schema/pilots.json",
   "type": "object",
   "definitions": {},
   "properties": {
@@ -17,7 +17,7 @@
     },
     "unique": {
       "type": "boolean",
-      "description": "Some pilot cards have unique names, which are identified by the bullet to the left of the name.\nA player cannot field two or more cards that share the same unique name, even if those cards are of different types."
+      "description": "Indicates whether this pilot has a unique name or not.\nSome pilot cards have unique names, which are identified by the bullet to the left of the name.\nA player cannot field two or more cards that share the same unique name, even if those cards are of different types."
     },
     "ship": {
       "type": "string",
@@ -118,9 +118,8 @@
       "additionalProperties": false
     },
     "range": {
-      "type": "string",
-      "description": "The ship\\s range. This property is for huge ships only.",
-      "pattern": "^[0-9]-[0-9]$"
+      "description": "The ship's range. This property is for huge ships only.",
+      "$ref": "definitions.json#/range"
     },
     "conditions": {
       "type": "array",

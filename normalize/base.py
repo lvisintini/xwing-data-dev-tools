@@ -24,7 +24,7 @@ class XWingDataNormalizer:
 
     def save_data(self):
         with open('{}/{}.js'.format(self.root, self.source_key), 'w') as file_object:
-            json.dump(self.data, file_object, indent=2)  #, ensure_ascii=False)
+            json.dump(self.data, file_object, indent=2, ensure_ascii=False)
 
     def analise(self):
         raise NotImplementedError
@@ -55,7 +55,7 @@ class MultipleXWingDataNormalizer:
 
     def save_data(self, source_key):
         with open('{}/{}.js'.format(self.root, source_key), 'w') as file_object:
-            json.dump(self.data[source_key], file_object, indent=2)  #, ensure_ascii=False)
+            json.dump(self.data[source_key], file_object, indent=2, ensure_ascii=False)
 
     def analise(self):
         raise NotImplementedError

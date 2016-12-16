@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://github.com/lvisintini/xwing-data/schema/damage-deck.json",
+  "id": "https://github.com/guidokessels/xwing-data/schema/damage-deck.json",
   "type": "object",
   "definitions": {},
   "properties": {

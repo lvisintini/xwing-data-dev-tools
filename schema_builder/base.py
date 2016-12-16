@@ -23,6 +23,9 @@ from pprint import pprint
 # source.release date
 # Add text for nameless pilots (pilot_hability, flavour_text)
 # product line and wave number instead of wave
+# new way of doing grants (like source contents)
+# upgrade.conditions
+# upgrade.ship
 
 # Schema to doc
 
@@ -139,6 +142,7 @@ class SchemaBuilder:
 class XWingSchemaBuilder(SchemaBuilder):
     source_keys = ()
     fields = {}
+    properties_order_tail = []
 
     def __init__(self, shared_definitions):
         super().__init__()
@@ -234,7 +238,6 @@ class XWingSchemaBuilder(SchemaBuilder):
 
         return no_unique_items
 
-
     def gather_definitions(self):
         for model in self.data:
             for attr, data in model.items():
@@ -253,6 +256,8 @@ class XWingSchemaBuilder(SchemaBuilder):
                     for nested_attr in model[attr].keys():
                         if nested_attr not in self.properties_order:
                             self.properties_order.append(nested_attr)
+
+        self.properties_order.extend(self.properties_order_tail)
 
     def explore_models(self):
         self.gather_required()

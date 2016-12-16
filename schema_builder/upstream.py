@@ -4,8 +4,13 @@ from collections import OrderedDict
 from base import XWingSchemaBuilder, SchemaBuilder
 
 
-class SharedDefinitionsBuilder(SchemaBuilder):
+class UpStreamHostMixin:
+    host = 'https://github.com/guidokessels/xwing-data/schema/'
+
+
+class SharedDefinitionsBuilder(UpStreamHostMixin, SchemaBuilder):
     target_key = 'definitions'
+
 
     definition_mapping = {
         'faction': 'faction',
@@ -15,7 +20,6 @@ class SharedDefinitionsBuilder(SchemaBuilder):
         'slot': 'slot',
         'slots': 'slot',
         'size': 'size',
-        'image': 'file_path',
     }
 
     definition_fields = {
@@ -46,6 +50,13 @@ class SharedDefinitionsBuilder(SchemaBuilder):
                        '([a-zA-Z0-9\ _-]*[a-zA-Z0-9\ _-])?)*\.[a-z0-9]{3}$'
             # https://regex101.com/r/0Tt5mC/1 for tests
             # https://regex101.com/delete/FId7doiOjHil897MHkZ1012h to delete
+        },
+        'range': {
+            'description': 'A range in expressed in range format',
+            'type': 'string',
+            'pattern': '^[1-5](-[1-5])?$',
+            # https://regex101.com/r/Go1Poa/1
+            # https://regex101.com/delete/xePtVgt5BGrmmSQFyzLwJraE
         }
     }
 
@@ -56,7 +67,8 @@ class SharedDefinitionsBuilder(SchemaBuilder):
             'size',
             'slot',
             'action',
-            'file_path'
+            'file_path',
+            'range',
         ]
         self.build_schema()
 
@@ -107,7 +119,7 @@ class SharedDefinitionsBuilder(SchemaBuilder):
         })
 
 
-class DamageDeckBuilder(XWingSchemaBuilder):
+class DamageDeckBuilder(UpStreamHostMixin, XWingSchemaBuilder):
     source_keys = ('damage-deck-core-tfa', 'damage-deck-core',)
     target_key = 'damage-deck'
 
@@ -132,7 +144,7 @@ class DamageDeckBuilder(XWingSchemaBuilder):
     }
 
 
-class HugeShipsBuilder(XWingSchemaBuilder):
+class HugeShipsBuilder(UpStreamHostMixin, XWingSchemaBuilder):
     source_keys = ('ships', )
     target_key = 'huge-ships'
 
@@ -304,14 +316,13 @@ class HugeShipsBuilder(XWingSchemaBuilder):
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] == 'huge'])
 
 
-class PilotsBuilder(XWingSchemaBuilder):
+class PilotsBuilder(UpStreamHostMixin, XWingSchemaBuilder):
     source_keys = ('pilots',)
     target_key = 'pilots'
     fields = {
         'id': {
             'description': 'The pilot\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this pilot to other data in this dataset.',
-            'type': 'integer',
             'minimum': 1,
             "exclusiveMinimum": False,
         },
@@ -400,7 +411,6 @@ class PilotsBuilder(XWingSchemaBuilder):
         },
         'ship': {
             'description': 'The pilot\'s ship name.',
-            'type': 'string',
             'minLength': 1,
         },
         'points': {
@@ -427,21 +437,20 @@ class PilotsBuilder(XWingSchemaBuilder):
             'minLength': 1,
         },
         'unique': {
-            'type': "boolean",
-            'description': 'Some pilot cards have unique names, which are '
+            'description': 'Indicates whether this pilot has a unique name or not.\n'
+                           'Some pilot cards have unique names, which are '
                            'identified by the bullet to the left of the name.\n'
                            'A player cannot field two or more cards that share the same unique '
                            'name, even if those cards are of different types.'
         },
         'range': {
-            'type': 'string',
-            'description': 'The ship\s range. This property is for huge ships only.',
-            'pattern': '^[0-9]-[0-9]$',
+            'description': 'The ship\'s range. This property is for huge ships only.',
+            '$ref': 'definitions.json#/range',
         }
     }
 
 
-class ShipsBuilder(XWingSchemaBuilder):
+class ShipsBuilder(UpStreamHostMixin, XWingSchemaBuilder):
     source_keys = ('ships',)
     target_key = 'ships'
 
@@ -563,15 +572,14 @@ class ShipsBuilder(XWingSchemaBuilder):
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] != 'huge'])
 
 
-class SourcesBuilder(XWingSchemaBuilder):
-    source_keys = ('sources',)
+class SourcesBuilder(UpStreamHostMixin, XWingSchemaBuilder):
+    source_keys = ('sources', )
     target_key = 'sources'
 
     fields = {
         'id': {
             'description': 'The source\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this source to other data in this dataset.',
-            'type': 'integer',
             'minimum': 0,
             "exclusiveMinimum": False,
         },
@@ -612,7 +620,6 @@ class SourcesBuilder(XWingSchemaBuilder):
             '$ref': 'definitions.json#/file_path',
         },
         'contents': {
-            "type": "object",
             'description': 'The sources contents',
             'properties': {
                 'ships': {
@@ -656,35 +663,144 @@ class SourcesBuilder(XWingSchemaBuilder):
             'additionalProperties': False,
         },
         'released': {
-            'type': "boolean",
             'description': 'This value indicates whether this sources has been released or not',
         }
     }
 
 
-class UpgradesBuilder(XWingSchemaBuilder):
+class UpgradesBuilder(UpStreamHostMixin, XWingSchemaBuilder):
     source_keys = ('upgrades',)
     target_key = 'upgrades'
+
+    properties_order_tail = ['type', ]
 
     fields = {
         'id': {
             'description': 'The upgrade\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this upgrade to other data in this dataset.',
-            'type': 'integer',
             'minimum': 0,
             "exclusiveMinimum": False,
         },
         'unique': {
-            'type': "boolean",
             'description': 'Some upgrade cards have unique names, which are '
                            'identified by the bullet to the left of the name.\n '
                            'A player cannot field two or more cards that share the same unique '
                            'name, even if those cards are of different types.'
         },
+        'size': {
+            'description': 'This ship sizes this upgrade is restricted to.',
+            'uniqueItems': True,
+            'items': {
+                'description': 'A ship size the upgrade is restricted to.',
+                '$ref': 'definitions.json#/size',
+            },
+        },
+        'name': {
+            'description': 'The upgrade\'s name as written on the card.',
+            'minLength': 1,
+        },
+        'points': {
+            'description': 'Squad points cost for this upgrade.',
+        },
+        'limited': {
+            'description': 'Indicates if this upgrade has the Limited trait.\n'
+                           'A ship cannot equip more than one copy of the same card with the '
+                           'Limited trait.'
+        },
+        'effect': {
+            'description': 'Some upgrades have effects, like bomb tokens.\n'
+                           'The text for such effects go here.',
+            'minLength': 1,
+        },
+        'ship': {
+            'description': 'The ships this upgrade is restricted to.',
+            'uniqueItems': True,
+            "items": {
+                'type': 'string',
+                'description': 'A ship\'s name.'
+            }
+        },
+        'grants': {
+            'description': 'A list of improvements the upgrade grants to the ship it\'s '
+                           'attached to.',
+            'uniqueItems': False,
+            "items": {
+                'type': 'object',
+                'description': 'An improvement granted by the upgrade',
+                'properties': {
+                    'type': {
+                        'description': 'The type of improvement granted by the upgrade.',
+                        'type': 'string',
+                        'enum': ['action', 'slot'],
+                        'minLength': 1,
+                    },
+                    'name': {
+                        'description': 'An improvement (of the type defined by the \'type\' '
+                                       'property) that the grants.',
+                        'anyOf': [
+                             {
+                                 'description': 'An action the upgrade grants the ship it\'s '
+                                                'attached to.',
+                                 '$ref': 'definitions.json#/action',
+                             },
+                             {
+                                 'description': 'An slot the upgrade grants the ship it\'s '
+                                                'attached to.',
+                                 '$ref': 'definitions.json#/slots',
+                             },
+                        ],
+                    }
+                },
+                'required': ['name', 'type'],
+                'additionalProperties': False,
+            }
+        },
+        'energy': {
+            'description': 'The upgrade\'s energy cost',
+            'minimum': 0,
+            "exclusiveMinimum": False,
+        },
+        'range': {
+            'description': 'The upgrade\'s range. Usually attach related.',
+            '$ref': 'definitions.json#/range',
+        },
+        'slot': {
+            'description': 'The slot used by this upgrade.',
+            '$ref': 'definitions.json#/slots'
+        },
+        'image': {
+            'description': 'The file path for this upgrade\'s image.',
+            '$ref': 'definitions.json#/file_path',
+        },
+        'attack': {
+            'description': 'The upgrade\'s attack value.',
+            'minimum': 1,
+            "exclusiveMinimum": False,
+        },
+        'text': {
+            'description': 'The upgrade\'s text as written on the card.',
+            'minLength': 1,
+        },
+        'faction': {
+            'description': 'The faction this upgrade is restricted to.',
+            '$ref': 'definitions.json#/faction',
+        },
+        'xws': {
+            'description': 'The upgrade\'s unique XWS id as described in the XWS format.',
+            'minLength': 1,
+        },
+        'conditions': {
+            'description': 'The upgrades\'s related conditions.',
+            'items': {
+                'description': 'A condition name.',
+                'type': 'string',
+            },
+            'uniqueItems': True,
+        },
     }
 
 
-class ConditionsBuilder(XWingSchemaBuilder):
+class ConditionsBuilder(UpStreamHostMixin, XWingSchemaBuilder):
     source_keys = ('conditions',)
     target_key = 'conditions'
 
@@ -692,7 +808,6 @@ class ConditionsBuilder(XWingSchemaBuilder):
         'id': {
             'description': 'The condition\'s unique id number. It\'s not used in the game but '
                            'it\'s used to link this condition to other data in this dataset.',
-            'type': 'integer',
             'minimum': 0,
             "exclusiveMinimum": False,
         },
@@ -709,7 +824,6 @@ class ConditionsBuilder(XWingSchemaBuilder):
             'minLength': 1,
         },
         'unique': {
-            'type': "boolean",
             'description': 'Some condition cards have unique names, which are '
                            'identified by the bullet to the left of the name.\n '
                            'A player cannot field two or more cards that share the same unique '
