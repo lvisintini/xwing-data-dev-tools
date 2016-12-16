@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://github.com/guidokessels/xwing-data/schema/upgrades.json",
+  "id": "./upgrades.json",
   "type": "object",
   "definitions": {},
   "properties": {
@@ -17,7 +17,7 @@
     },
     "slot": {
       "description": "The slot used by this upgrade.",
-      "$ref": "definitions.json#/slots"
+      "$ref": "./definitions.json#/slots"
     },
     "points": {
       "type": "integer",
@@ -31,7 +31,7 @@
     },
     "range": {
       "description": "The upgrade's range. Usually attach related.",
-      "$ref": "definitions.json#/range"
+      "$ref": "./definitions.json#/range"
     },
     "text": {
       "type": "string",
@@ -40,7 +40,7 @@
     },
     "image": {
       "description": "The file path for this upgrade's image.",
-      "$ref": "definitions.json#/file_path"
+      "$ref": "./definitions.json#/file_path"
     },
     "xws": {
       "type": "string",
@@ -57,7 +57,7 @@
       "uniqueItems": true,
       "items": {
         "description": "A ship size the upgrade is restricted to.",
-        "$ref": "definitions.json#/size"
+        "$ref": "./definitions.json#/size"
       }
     },
     "effect": {
@@ -67,7 +67,7 @@
     },
     "faction": {
       "description": "The faction this upgrade is restricted to.",
-      "$ref": "definitions.json#/faction"
+      "$ref": "./definitions.json#/faction"
     },
     "limited": {
       "type": "boolean",
@@ -92,11 +92,11 @@
             "anyOf": [
               {
                 "description": "An action the upgrade grants the ship it's attached to.",
-                "$ref": "definitions.json#/action"
+                "$ref": "./definitions.json#/action"
               },
               {
                 "description": "An slot the upgrade grants the ship it's attached to.",
-                "$ref": "definitions.json#/slots"
+                "$ref": "./definitions.json#/slots"
               }
             ]
           },

@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://github.com/guidokessels/xwing-data/schema/conditions.json",
+  "id": "./conditions.json",
   "type": "object",
   "definitions": {},
   "properties": {
     "image": {
       "description": "The file path for this condition card's image.",
-      "$ref": "definitions.json#/file_path"
+      "$ref": "./definitions.json#/file_path"
     },
     "name": {
       "type": "string",

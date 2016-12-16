@@ -238,6 +238,20 @@ class XWingSchemaBuilder(SchemaBuilder):
 
         return no_unique_items
 
+    def change_ref_host(self, d):
+        if isinstance(d, dict):
+            if '$ref' in d:
+                d['$ref'] = self.host + d['$ref']
+
+            for new_d in [x for x in d.values() if isinstance(x, dict)]:
+                self.change_ref_host(new_d)
+
+            for a_list in [x for x in d.values() if isinstance(x, list)]:
+                for i in range(len(a_list)):
+                    new_d = a_list[i]
+                    if isinstance(new_d, dict):
+                        self.change_ref_host(new_d)
+
     def gather_definitions(self):
         for model in self.data:
             for attr, data in model.items():
@@ -295,3 +309,5 @@ class XWingSchemaBuilder(SchemaBuilder):
             elif isinstance(self.properties[attr]['type'], list):
                 if len(self.properties[attr]['type']) == 1:
                     self.properties[attr]['type'] = self.properties[attr]['type'][0]
+
+        self.change_ref_host(self.properties)

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://github.com/guidokessels/xwing-data/schema/ships.json",
+  "id": "./ships.json",
   "type": "object",
   "definitions": {},
   "properties": {
@@ -16,7 +16,7 @@
       "minItems": 1,
       "items": {
         "description": "A faction this ship belongs to.",
-        "$ref": "definitions.json#/faction"
+        "$ref": "./definitions.json#/faction"
       }
     },
     "attack": {
@@ -50,7 +50,7 @@
       "minItems": 0,
       "items": {
         "description": "A list of all the actions the ship is capable of.",
-        "$ref": "definitions.json#/action"
+        "$ref": "./definitions.json#/action"
       }
     },
     "maneuvers": {
@@ -77,7 +77,7 @@
     },
     "size": {
       "description": "The ship's size.",
-      "$ref": "definitions.json#/size",
+      "$ref": "./definitions.json#/size",
       "pattern": "^(large|small)$"
     },
     "xws": {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://github.com/guidokessels/xwing-data/schema/pilots.json",
+  "id": "./pilots.json",
   "type": "object",
   "definitions": {},
   "properties": {
@@ -68,7 +68,7 @@
       "uniqueItems": false,
       "items": {
         "description": "A slot available to this ship.",
-        "$ref": "definitions.json#/slots"
+        "$ref": "./definitions.json#/slots"
       }
     },
     "text": {
@@ -78,11 +78,11 @@
     },
     "image": {
       "description": "The file path for this pilot card's image.",
-      "$ref": "definitions.json#/file_path"
+      "$ref": "./definitions.json#/file_path"
     },
     "faction": {
       "description": "The pilot's faction.",
-      "$ref": "definitions.json#/faction"
+      "$ref": "./definitions.json#/faction"
     },
     "xws": {
       "type": "string",
@@ -119,7 +119,7 @@
     },
     "range": {
       "description": "The ship's range. This property is for huge ships only.",
-      "$ref": "definitions.json#/range"
+      "$ref": "./definitions.json#/range"
     },
     "conditions": {
       "type": "array",

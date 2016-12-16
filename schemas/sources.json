@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://github.com/guidokessels/xwing-data/schema/sources.json",
+  "id": "./sources.json",
   "type": "object",
   "definitions": {},
   "properties": {
@@ -17,11 +17,11 @@
     },
     "image": {
       "description": "The file path for this source's image.",
-      "$ref": "definitions.json#/file_path"
+      "$ref": "./definitions.json#/file_path"
     },
     "thumb": {
       "description": "The file path for this source's thumbnail.",
-      "$ref": "definitions.json#/file_path"
+      "$ref": "./definitions.json#/file_path"
     },
     "wave": {
       "description": "The sources wave (or product line).",
