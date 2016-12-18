@@ -4,8 +4,15 @@ from collections import OrderedDict
 from base import XWingSchemaBuilder, SchemaBuilder
 
 
-class SharedDefinitionsBuilder(SchemaBuilder):
+class OverrideMixin:
+    #host = ''
+    #data_files_root = '/home/lvisintini/src/xwing-data/'
+    #schema_files_root = '/home/lvisintini/src/xwing-data/schemas/'
+
+
+class SharedDefinitionsBuilder(OverrideMixin, SchemaBuilder):
     target_key = 'definitions'
+    title = 'Schema for common fields in data files'
 
     definition_mapping = {
         'faction': 'faction',
@@ -41,9 +48,10 @@ class SharedDefinitionsBuilder(SchemaBuilder):
         'file_path': {
             'description': 'A file path',
             'type': 'string',
-            'pattern': '^[a-zA-Z0-9_-]([a-zA-Z0-9\ _-]*[a-zA-Z0-9\ _-])?(\/[a-zA-Z0-9_-]'
-                       '([a-zA-Z0-9\ _-]*[a-zA-Z0-9\ _-])?)*\.[a-z0-9]{3}$'
-            # https://regex101.com/r/0Tt5mC/1 for tests
+            'pattern': '^[a-zA-Z\(\)\.0-9_-]([a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?'
+                       '(\/[a-zA-Z\(\)\.0-9_-]([a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?)*'
+                       '.[a-z0-9]{3}$'
+            # https://regex101.com/r/0Tt5mC/3 for tests
             # https://regex101.com/delete/FId7doiOjHil897MHkZ1012h to delete
         },
         'range': {
@@ -114,9 +122,10 @@ class SharedDefinitionsBuilder(SchemaBuilder):
         })
 
 
-class DamageDeckBuilder(XWingSchemaBuilder):
+class DamageDeckBuilder(OverrideMixin, XWingSchemaBuilder):
     source_keys = ('damage-deck-core-tfa', 'damage-deck-core',)
     target_key = 'damage-deck'
+    title = 'Schema for damage deck data files (original and tfa)'
 
     fields = {
         'name': {
@@ -139,9 +148,10 @@ class DamageDeckBuilder(XWingSchemaBuilder):
     }
 
 
-class HugeShipsBuilder(XWingSchemaBuilder):
+class HugeShipsBuilder(OverrideMixin, XWingSchemaBuilder):
     source_keys = ('ships', )
     target_key = 'huge-ships'
+    title = 'Schema for huge ships in ships data file'
 
     fields = {
         'id': {
@@ -161,7 +171,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
             'uniqueItems': True,
             'items': {
                 'description': 'A faction this ship belongs to.',
-                '$ref': 'definitions.json#/faction'
+                '$ref': 'definitions.json#/definitions/faction'
             }
         },
         'actions': {
@@ -169,7 +179,7 @@ class HugeShipsBuilder(XWingSchemaBuilder):
             'description': 'A list of all the actions the ship is capable of.',
             'items': {
                 'description': 'An action this ship is capable of.',
-                '$ref': 'definitions.json#/action'
+                '$ref': 'definitions.json#/definitions/action'
             },
             'uniqueItems': True,
         },
@@ -207,8 +217,18 @@ class HugeShipsBuilder(XWingSchemaBuilder):
         },
         'size': {
             'description': 'The ship\'s size.',
-            '$ref': 'definitions.json#/size',
-            'pattern': '^huge$',
+            'allOf': [
+                {
+                    'description': 'Ship size must be a valid size in size in the game.',
+                    '$ref': 'definitions.json#/definitions/size'
+                },
+                {
+                    'description': 'This schema only applies to huge ships.\n'
+                                   'Therefore, ship size is restricted to huge.',
+                    'type': 'string',
+                    'enum': ['huge', ]
+                },
+            ]
         },
         'maneuvers_energy': {
             'description': 'The ship\s maneuvers energy costs.',
@@ -348,14 +368,16 @@ class HugeShipsBuilder(XWingSchemaBuilder):
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] == 'huge'])
 
 
-class PilotsBuilder(XWingSchemaBuilder):
+class PilotsBuilder(OverrideMixin, XWingSchemaBuilder):
     source_keys = ('pilots',)
     target_key = 'pilots'
+    title = 'Schema for pilots data file'
+
     fields = {
         'id': {
             'description': 'The pilot\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this pilot to other data in this dataset.',
-            'minimum': 1,
+            'minimum': 0,
             "exclusiveMinimum": False,
         },
         'skill': {
@@ -406,12 +428,11 @@ class PilotsBuilder(XWingSchemaBuilder):
                     "exclusiveMinimum": False,
                 },
             },
-            'required': [],
             'additionalProperties': False,
         },
         'image': {
             'description': 'The file path for this pilot card\'s image.',
-            '$ref': 'definitions.json#/file_path',
+            '$ref': 'definitions.json#/definitions/file_path',
         },
         'xws': {
             'description': 'The pilot\'s unique XWS id as described in the XWS format.',
@@ -423,7 +444,7 @@ class PilotsBuilder(XWingSchemaBuilder):
         },
         'faction': {
             'description': 'The pilot\'s faction.',
-            '$ref': 'definitions.json#/faction'
+            '$ref': 'definitions.json#/definitions/faction'
         },
         'conditions': {
             'description': 'The pilot\'s related conditions.',
@@ -446,7 +467,7 @@ class PilotsBuilder(XWingSchemaBuilder):
             'description': 'A list of the slots available to this pilot.',
             'items': {
                 'description': 'A slot available to this ship.',
-                '$ref': 'definitions.json#/slots'
+                '$ref': 'definitions.json#/definitions/slot'
             },
             'uniqueItems': False,
         },
@@ -486,14 +507,15 @@ class PilotsBuilder(XWingSchemaBuilder):
         },
         'range': {
             'description': 'The ship\'s range. This property is for huge ships only.',
-            '$ref': 'definitions.json#/range',
+            '$ref': 'definitions.json#/definitions/range',
         }
     }
 
 
-class ShipsBuilder(XWingSchemaBuilder):
+class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
     source_keys = ('ships',)
     target_key = 'ships'
+    title = 'Schema for small and large ships in ships data file'
 
     fields = {
         'name': {
@@ -505,7 +527,7 @@ class ShipsBuilder(XWingSchemaBuilder):
             'minItems': 1,
             'items': {
                 'description': 'A faction this ship belongs to.',
-                '$ref': 'definitions.json#/faction'
+                '$ref': 'definitions.json#/definitions/faction'
             },
             'uniqueItems': True,
         },
@@ -514,7 +536,7 @@ class ShipsBuilder(XWingSchemaBuilder):
             'minItems': 0,
             'items': {
                 'description': 'A list of all the actions the ship is capable of.',
-                '$ref': 'definitions.json#/action'
+                '$ref': 'definitions.json#/definitions/action'
             },
             'uniqueItems': True,
         },
@@ -739,8 +761,18 @@ class ShipsBuilder(XWingSchemaBuilder):
         },
         'size': {
             'description': 'The ship\'s size.',
-            '$ref': 'definitions.json#/size',
-            'pattern': '^(large|small)$'
+            'allOf': [
+                {
+                    'description': 'Ship size must be a valid size in size in the game.',
+                    '$ref': 'definitions.json#/definitions/size'
+                },
+                {
+                    'description': 'This schema only applies to small or large ships.\n'
+                                   'Therefore, ship size is restricted to small or large.',
+                    'type': 'string',
+                    'enum': ['small', 'large']
+                },
+            ],
         }
     }
 
@@ -751,9 +783,10 @@ class ShipsBuilder(XWingSchemaBuilder):
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] != 'huge'])
 
 
-class SourcesBuilder(XWingSchemaBuilder):
-    source_keys = ('sources',)
+class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):
+    source_keys = ('sources', )
     target_key = 'sources'
+    title = 'Schema for sources data file'
 
     fields = {
         'id': {
@@ -775,11 +808,11 @@ class SourcesBuilder(XWingSchemaBuilder):
         },
         'image': {
             'description': 'The file path for this source\'s image.',
-            '$ref': 'definitions.json#/file_path',
+            '$ref': 'definitions.json#/definitions/file_path',
         },
         'thumb': {
             'description': 'The file path for this source\'s thumbnail.',
-            '$ref': 'definitions.json#/file_path',
+            '$ref': 'definitions.json#/definitions/file_path',
         },
         'contents': {
         },
@@ -789,9 +822,11 @@ class SourcesBuilder(XWingSchemaBuilder):
     }
 
 
-class UpgradesBuilder(XWingSchemaBuilder):
+class UpgradesBuilder(OverrideMixin, XWingSchemaBuilder):
     source_keys = ('upgrades',)
     target_key = 'upgrades'
+    title = 'Schema for upgrades data file'
+    properties_order_tail = ['type', ]
 
     fields = {
         'id': {
@@ -811,7 +846,7 @@ class UpgradesBuilder(XWingSchemaBuilder):
             'uniqueItems': True,
             'items': {
                 'description': 'A ship size the upgrade is restricted to.',
-                '$ref': 'definitions.json#/size',
+                '$ref': 'definitions.json#/definitions/size',
             },
         },
         'name': {
@@ -842,15 +877,15 @@ class UpgradesBuilder(XWingSchemaBuilder):
         },
         'range': {
             'description': 'The upgrade\'s range. Usually attach related.',
-            '$ref': 'definitions.json#/range',
+            '$ref': 'definitions.json#/definitions/range',
         },
         'slot': {
             'description': 'The slot used by this upgrade.',
-            '$ref': 'definitions.json#/slots'
+            '$ref': 'definitions.json#/definitions/slot'
         },
         'image': {
             'description': 'The file path for this upgrade\'s image.',
-            '$ref': 'definitions.json#/file_path',
+            '$ref': 'definitions.json#/definitions/file_path',
         },
         'attack': {
             'description': 'The upgrade\'s attack value.',
@@ -863,7 +898,7 @@ class UpgradesBuilder(XWingSchemaBuilder):
         },
         'faction': {
             'description': 'The faction this upgrade is restricted to.',
-            '$ref': 'definitions.json#/faction',
+            '$ref': 'definitions.json#/definitions/faction',
         },
         'xws': {
             'description': 'The upgrade\'s unique XWS id as described in the XWS format.',
@@ -874,9 +909,10 @@ class UpgradesBuilder(XWingSchemaBuilder):
     }
 
 
-class ConditionsBuilder(XWingSchemaBuilder):
+class ConditionsBuilder(OverrideMixin, XWingSchemaBuilder):
     source_keys = ('conditions',)
     target_key = 'conditions'
+    title = 'Schema for conditions data file'
 
     fields = {
         'id': {
@@ -887,7 +923,7 @@ class ConditionsBuilder(XWingSchemaBuilder):
         },
         'image': {
             'description': 'The file path for this condition card\'s image.',
-            '$ref': 'definitions.json#/file_path',
+            '$ref': 'definitions.json#/definitions/file_path',
         },
         'name': {
             'description': 'The conditions\'s name as written on the package.',

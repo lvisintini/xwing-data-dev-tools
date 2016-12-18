@@ -6,15 +6,13 @@ from pprint import pprint
 # xws definition = redo all names -> maybe -> maybe a separate app that links the xws repo to the data repo
 
 # FIXME
-# defninitions should be local and external, somehow. can calculated on the fly if necesary
-#
-
-# FIXME
 # Asteroids
 # Attributes order in the data. define one.
 
 # FIXME
 # New project ultimate Game references merging LearToPlay, game reference and FAQ with errata
+# Schema to doc
+
 
 # FIXME
 # Mark cards with errata.
@@ -27,7 +25,6 @@ from pprint import pprint
 # upgrade.conditions
 # upgrade.ship
 
-# Schema to doc
 
 
 class SchemaBuilder:
@@ -35,6 +32,7 @@ class SchemaBuilder:
     data_files_root = '/home/lvisintini/src/xwing-data/'
     schema_files_root = '/home/lvisintini/src/xwing-data-dev-tools/schemas/'
     target_key = ''
+    title = ''
 
     local_definitions = {}
 
@@ -103,7 +101,8 @@ class SchemaBuilder:
     def build_schema(self):
         self.schema = {
             "$schema": "http://json-schema.org/draft-04/schema#",
-            "id": "{}{}".format(self.host, self.target_filename),
+            "title" : self.title,
+            "id": "{}{}#".format(self.host, self.target_filename),
             "definitions": self.local_definitions,
         }
 
@@ -310,4 +309,4 @@ class XWingSchemaBuilder(SchemaBuilder):
                 if len(self.properties[attr]['type']) == 1:
                     self.properties[attr]['type'] = self.properties[attr]['type'][0]
 
-        self.change_ref_host(self.properties)
+        #self.change_ref_host(self.properties)
