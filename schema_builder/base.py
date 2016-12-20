@@ -24,13 +24,13 @@ from pprint import pprint
 # new way of doing grants (like source contents)
 # upgrade.conditions
 # upgrade.ship
-
+# https://gist.github.com/guidokessels/5e895c4e5cd882ceb4df57c56fda9cce
 
 
 class SchemaBuilder:
-    host = 'https://github.com/lvisintini/xwing-data/schema/'
-    data_files_root = '/home/lvisintini/src/xwing-data/'
-    schema_files_root = '/home/lvisintini/src/xwing-data-dev-tools/schemas/'
+    data_files_root = '/home/lvisintini/src/xwing-data/data/'
+    schema_files_root = '/home/lvisintini/src/xwing-data/schemas/'
+    host = ''
     target_key = ''
     title = ''
 
@@ -142,6 +142,7 @@ class XWingSchemaBuilder(SchemaBuilder):
     source_keys = ()
     fields = {}
     properties_order_tail = []
+    not_required = ['image', ]
 
     def __init__(self, shared_definitions):
         super().__init__()
@@ -175,11 +176,11 @@ class XWingSchemaBuilder(SchemaBuilder):
 
     def load_data(self):
         for key in self.source_keys:
-            with open('{}data/{}.js'.format(self.data_files_root, key), 'r') as file_object:
+            with open('{}{}.js'.format(self.data_files_root, key), 'r') as file_object:
                 self.data.extend(json.load(file_object, object_pairs_hook=OrderedDict))
 
     def gather_required(self):
-        required = list(self.data[0].keys())
+        required = [key for key in self.data[0].keys() if key not in self.not_required]
         for model in self.data:
             required = [r for r in required if r in model]
         self.required = required

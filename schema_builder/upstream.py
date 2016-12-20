@@ -5,9 +5,7 @@ from base import XWingSchemaBuilder, SchemaBuilder
 
 
 class OverrideMixin:
-    #host = ''
-    #data_files_root = '/home/lvisintini/src/xwing-data/'
-    #schema_files_root = '/home/lvisintini/src/xwing-data/schemas/'
+    pass
 
 
 class SharedDefinitionsBuilder(OverrideMixin, SchemaBuilder):
@@ -51,7 +49,7 @@ class SharedDefinitionsBuilder(OverrideMixin, SchemaBuilder):
             'pattern': '^[a-zA-Z\(\)\.0-9_-]([a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?'
                        '(\/[a-zA-Z\(\)\.0-9_-]([a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?)*'
                        '.[a-z0-9]{3}$'
-            # https://regex101.com/r/0Tt5mC/3 for tests
+            # https://regex101.com/r/0Tt5mC/5 for tests
             # https://regex101.com/delete/FId7doiOjHil897MHkZ1012h to delete
         },
         'range': {
@@ -143,7 +141,6 @@ class DamageDeckBuilder(OverrideMixin, XWingSchemaBuilder):
         'amount': {
             'description': 'Indicates how many cards of this type are included in it\'s source.',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
     }
 
@@ -179,34 +176,28 @@ class HugeShipsBuilder(OverrideMixin, XWingSchemaBuilder):
         'energy': {
             'description': 'The ship\'s energy value.',
             'minimum': 1,
-            "exclusiveMinimum": False,
         },
         'attack': {
             'description': 'The ship\'s attack value.',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
         "agility": {
             'description': 'The ship\'s agility value.',
             "minimum": 0,
-            "exclusiveMinimum": False,
         },
         "hull": {
             'description': 'The ship\'s hull value.',
             "minimum": 0,
-            "exclusiveMinimum": False,
         },
         "shields": {
             'description': 'The ship\'s shields value.',
             "minimum": 0,
-            "exclusiveMinimum": False,
         },
         'epic_points': {
             'description': 'The ship\'s epic points value, as described in the X-Wing Epic Play '
                            'Tournament Rules.',
             'type': 'number',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
         'size': {
             'description': 'The ship\'s size.',
@@ -267,8 +258,6 @@ class HugeShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                     'type': 'integer',
                     'minimum': 0,
                     'maximum': 3,
-                    "exclusiveMaximum": False,
-                    "exclusiveMinimum": False,
                 },
             },
         },
@@ -315,8 +304,6 @@ class HugeShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                     'type': 'integer',
                     'minimum': 0,
                     'maximum': 1,
-                    "exclusiveMaximum": False,
-                    "exclusiveMinimum": False,
                 },
             },
         },
@@ -328,7 +315,7 @@ class HugeShipsBuilder(OverrideMixin, XWingSchemaBuilder):
 
     def load_data(self):
         for key in self.source_keys:
-            with open('{}data/{}.js'.format(self.data_files_root, key), 'r') as file_object:
+            with open('{}{}.js'.format(self.data_files_root, key), 'r') as file_object:
                 unfiltered_data = json.load(file_object, object_pairs_hook=OrderedDict)
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] == 'huge'])
 
@@ -343,7 +330,6 @@ class PilotsBuilder(OverrideMixin, XWingSchemaBuilder):
             'description': 'The pilot\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this pilot to other data in this dataset.',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
         'skill': {
             'description': 'The pilot\'s skill.',
@@ -353,8 +339,6 @@ class PilotsBuilder(OverrideMixin, XWingSchemaBuilder):
                     'type': 'integer',
                     'minimum': 0,
                     'maximum': 9,
-                    "exclusiveMaximum": False,
-                    "exclusiveMinimum": False,
                 },
                 {
                     'description': 'Having \'?\' as a pilot\'s skill means that there is a '
@@ -375,22 +359,18 @@ class PilotsBuilder(OverrideMixin, XWingSchemaBuilder):
                 'attack': {
                     'description': 'The ship\'s attack value.',
                     'minimum': 0,
-                    "exclusiveMinimum": False,
                 },
                 "agility": {
                     'description': 'The ship\'s agility value.',
                     "minimum": 0,
-                    "exclusiveMinimum": False,
                 },
                 "hull": {
                     'description': 'The ship\'s hull value.',
                     "minimum": 0,
-                    "exclusiveMinimum": False,
                 },
                 "shields": {
                     'description': 'The ship\'s shields value.',
                     "minimum": 0,
-                    "exclusiveMinimum": False,
                 },
             },
             'additionalProperties': False,
@@ -438,7 +418,6 @@ class PilotsBuilder(OverrideMixin, XWingSchemaBuilder):
                     'description': 'Squad points cost.',
                     'type': 'integer',
                     'minimum': 1,
-                    "exclusiveMinimum": False,
                 },
                 {
                     'description': 'Having \'?\' as a pilot\'s squad points cost means that '
@@ -499,22 +478,18 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
         'attack': {
             'description': 'The ship\'s attack value.',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
         "agility": {
             'description': 'The ship\'s agility value.',
             "minimum": 0,
-            "exclusiveMinimum": False,
         },
         "hull": {
             'description': 'The ship\'s hull value.',
             "minimum": 0,
-            "exclusiveMinimum": False,
         },
         "shields": {
             'description': 'The ship\'s shields value.',
             "minimum": 0,
-            "exclusiveMinimum": False,
         },
         'maneuvers': {
             'description': 'The huge ship\s maneuvers.',
@@ -568,8 +543,6 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                     'type': 'integer',
                     'minimum': 0,
                     'maximum': 3,
-                    "exclusiveMaximum": False,
-                    "exclusiveMinimum": False,
                 },
             },
         },
@@ -596,7 +569,7 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
 
     def load_data(self):
         for key in self.source_keys:
-            with open('{}data/{}.js'.format(self.data_files_root, key), 'r') as file_object:
+            with open('{}{}.js'.format(self.data_files_root, key), 'r') as file_object:
                 unfiltered_data = json.load(file_object, object_pairs_hook=OrderedDict)
                 self.data.extend([hs for hs in unfiltered_data if hs['size'] != 'huge'])
 
@@ -611,7 +584,6 @@ class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):
             'description': 'The source\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this source to other data in this dataset.',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
         'sku': {
             'description': 'Fantasy Flight Games unique product key for this particular source.',
@@ -626,7 +598,6 @@ class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):
                                    'but here is presented in arabic numerals.',
                     'type': 'integer',
                     'minimum': 0,
-                    "exclusiveMinimum": False,
                 },
                 {
                     'description': 'Some sources are not grouped under particular wave, but under '
@@ -709,7 +680,6 @@ class UpgradesBuilder(OverrideMixin, XWingSchemaBuilder):
             'description': 'The upgrade\'s unique id number. It\'s not used in the game but it\'s '
                            'used to link this upgrade to other data in this dataset.',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
         'unique': {
             'description': 'Some upgrade cards have unique names, which are '
@@ -757,38 +727,48 @@ class UpgradesBuilder(OverrideMixin, XWingSchemaBuilder):
             "items": {
                 'type': 'object',
                 'description': 'An improvement granted by the upgrade',
-                'properties': {
-                    'type': {
-                        'description': 'The type of improvement granted by the upgrade.',
-                        'type': 'string',
-                        'enum': ['action', 'slot'],
-                        'minLength': 1,
+                'anyOf': [
+                    {
+                        'description': 'The improved granted by this upgrade (action).',
+                        'type': 'object',
+                        'properties': {
+                            'type': {
+                                'description': 'This upgrade grants an action.',
+                                'type': 'string',
+                                'enum': ['action', ],
+                            },
+                            'name': {
+                                'description': 'The action granted by this upgrade',
+                                '$ref': 'definitions.json#/definitions/action',
+                            }
+                        },
+                        'required': ['name', 'type'],
+                        'additionalProperties': False,
                     },
-                    'name': {
-                        'description': 'An improvement (of the type defined by the \'type\' '
-                                       'property) that the grants.',
-                        'anyOf': [
-                             {
-                                 'description': 'An action the upgrade grants the ship it\'s '
-                                                'attached to.',
-                                 '$ref': 'definitions.json#/definitions/action',
-                             },
-                             {
-                                 'description': 'An slot the upgrade grants the ship it\'s '
-                                                'attached to.',
-                                 '$ref': 'definitions.json#/definitions/slot',
-                             },
-                        ],
+                    {
+                        'description': 'The improved granted by this upgrade (slot).',
+                        'type': 'object',
+                        'properties': {
+                            'type': {
+                                'description': 'This upgrade grants a slot.',
+                                'type': 'string',
+                                'enum': ['slot', ],
+                            },
+                            'name': {
+                                'description': 'The slot granted by this upgrade',
+                                '$ref': 'definitions.json#/definitions/slot',
+                            }
+                        },
+                        'required': ['name', 'type'],
+                        'additionalProperties': False,
                     }
-                },
-                'required': ['name', 'type'],
-                'additionalProperties': False,
+
+                ],
             }
         },
         'energy': {
             'description': 'The upgrade\'s energy cost',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
         'range': {
             'description': 'The upgrade\'s range. Usually attach related.',
@@ -805,7 +785,6 @@ class UpgradesBuilder(OverrideMixin, XWingSchemaBuilder):
         'attack': {
             'description': 'The upgrade\'s attack value.',
             'minimum': 1,
-            "exclusiveMinimum": False,
         },
         'text': {
             'description': 'The upgrade\'s text as written on the card.',
@@ -840,7 +819,6 @@ class ConditionsBuilder(OverrideMixin, XWingSchemaBuilder):
             'description': 'The condition\'s unique id number. It\'s not used in the game but '
                            'it\'s used to link this condition to other data in this dataset.',
             'minimum': 0,
-            "exclusiveMinimum": False,
         },
         'image': {
             'description': 'The file path for this condition card\'s image.',

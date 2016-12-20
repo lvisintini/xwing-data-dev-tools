@@ -5,9 +5,7 @@ from base import XWingSchemaBuilder, SchemaBuilder
 
 
 class OverrideMixin:
-    #host = ''
-    #data_files_root = '/home/lvisintini/src/xwing-data/'
-    #schema_files_root = '/home/lvisintini/src/xwing-data/schemas/'
+    pass
 
 
 class SharedDefinitionsBuilder(OverrideMixin, SchemaBuilder):
