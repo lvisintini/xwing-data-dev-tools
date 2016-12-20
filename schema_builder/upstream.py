@@ -145,181 +145,6 @@ class DamageDeckBuilder(OverrideMixin, XWingSchemaBuilder):
     }
 
 
-class HugeShipsBuilder(OverrideMixin, XWingSchemaBuilder):
-    source_keys = ('ships', )
-    target_key = 'huge-ships'
-    title = 'Schema for huge ships in ships data file'
-
-    fields = {
-        'name': {
-            'description': 'The ship\'s name, as written on the card itself.',
-            'minLength': 1,
-        },
-        'faction': {
-            'minItems': 1,
-            'description': 'A list of factions this ship belongs to.',
-            'uniqueItems': True,
-            'items': {
-                'description': 'A faction this ship belongs to.',
-                '$ref': 'definitions.json#/definitions/faction'
-            }
-        },
-        'actions': {
-            'minItems': 0,
-            'description': 'A list of all the actions the ship is capable of.',
-            'items': {
-                'description': 'An action this ship is capable of.',
-                '$ref': 'definitions.json#/definitions/action'
-            },
-            'uniqueItems': True,
-        },
-        'energy': {
-            'description': 'The ship\'s energy value.',
-            'minimum': 1,
-        },
-        'attack': {
-            'description': 'The ship\'s attack value.',
-            'minimum': 0,
-        },
-        "agility": {
-            'description': 'The ship\'s agility value.',
-            "minimum": 0,
-        },
-        "hull": {
-            'description': 'The ship\'s hull value.',
-            "minimum": 0,
-        },
-        "shields": {
-            'description': 'The ship\'s shields value.',
-            "minimum": 0,
-        },
-        'epic_points': {
-            'description': 'The ship\'s epic points value, as described in the X-Wing Epic Play '
-                           'Tournament Rules.',
-            'type': 'number',
-            'minimum': 0,
-        },
-        'size': {
-            'description': 'The ship\'s size.',
-            'allOf': [
-                {
-                    'description': 'Ship size must be a valid size in size in the game.',
-                    '$ref': 'definitions.json#/definitions/size'
-                },
-                {
-                    'description': 'This schema only applies to huge ships.\n'
-                                   'Therefore, ship size is restricted to huge.',
-                    'type': 'string',
-                    'enum': ['huge', ]
-                },
-            ]
-        },
-        'maneuvers_energy': {
-            'description': 'The ship\s maneuvers energy costs.',
-            'maxItems': 6,
-            'minItems': 0,
-            'uniqueItems': False,
-            'items': {
-                'uniqueItems': False,
-                'description': 'Each element in this array contains a representation of the '
-                               'maneuver costs for the maneuvers available to the huge ship at a '
-                               'particular speed, determined its position in the array. ei. '
-                               '``ship.maneuvers_energy[1]`` will provide all '
-                               'maneuver cost for the maneuvers available to the huge ship at '
-                               'speed 1.\n'
-                               'This array\'s length should match the array\'s length of the '
-                               'array in the maneuvers property.\n'
-                               'In other words ``ship.maneuvers.length`` should equal to '
-                               '``ship.maneuvers_energy.length``.',
-                'type': 'array',
-                'maxItems': 6,
-                'minItems': 0,
-                'items': {
-                    'description': 'This array is a representation of a huge ship\' maneuvers '
-                                   'energy cost at a particular speed.\n'
-                                   '\n'
-                                   'Each value on this array references a different maneuver '
-                                   'depending on its index, which maps according to the following '
-                                   'list:\n'
-                                   '\t0 = Left Turn\n'
-                                   '\t1 = Left Bank\n'
-                                   '\t2 = Straight\n'
-                                   '\t3 = Right Bank\n'
-                                   '\t4 = Right Turn\n'
-                                   '\t5 = Koiogran Turn\n'
-                                   '\n'
-                                   'Possible values in this array range from 0 to 3 and indicate '
-                                   'the referenced maneuver\'s energy cost.\n'
-                                   '\n'
-                                   'This array\'s length should match the array\'s length of the '
-                                   'array in the maneuvers property at the same speed.\n'
-                                   'In other words ``ship.maneuvers[2].length`` should equal to '
-                                   '``ship.maneuvers_energy[2].length``.',
-                    'type': 'integer',
-                    'minimum': 0,
-                    'maximum': 3,
-                },
-            },
-        },
-        'maneuvers': {
-            'description': 'The huge ship\s maneuvers.',
-            'maxItems': 6,
-            'minItems': 0,
-            'uniqueItems': False,
-            'items': {
-                'uniqueItems': False,
-                'description': 'Each element in this array contains a representation of the '
-                               'maneuvers available to the ship at a particular speed, determined '
-                               'its position in the array. ei. ship.maneuvers[1] will provide all '
-                               'maneuvers available to said ship at speed 1.\n'
-                               'This array may be a short as required to provide accurate data, '
-                               'meaning that a missing speed \'index\' indicates that the ship is '
-                               'is not capable of such speed.',
-                'type': 'array',
-                'maxItems': 6,
-                'minItems': 0,
-                'items': {
-                    'description': 'This array is a representation of a huge ship\' maneuvers at a '
-                                   'particular speed.\n'
-                                   '\n'
-                                   'Each value on this array references a different maneuver '
-                                   'depending on its index, which maps according to the following '
-                                   'list:\n'
-                                   '\t0 = Left Turn\n'
-                                   '\t1 = Left Bank\n'
-                                   '\t2 = Straight\n'
-                                   '\t3 = Right Bank\n'
-                                   '\t4 = Right Turn\n'
-                                   '\t5 = Koiogran Turn\n'
-                                   '\n'
-                                   'Possible values in this array range from 0 to 1 and mean the '
-                                   'following:\n'
-                                   '\t0 = Maneuver unavailable\n'
-                                   '\t1 = Maneuver available\n'
-                                   '\n'
-                                   'This array may be a short as required to provide accurate '
-                                   'data, meaning that a missing value for a particular maneuver '
-                                   'type indicates that said maneuver is not available to that '
-                                   'particular huge ship at that particular speed.\n',
-                    'type': 'integer',
-                    'minimum': 0,
-                    'maximum': 1,
-                },
-            },
-        },
-        'xws': {
-            'description': 'The ship\'s unique XWS id as described in the XWS format.',
-            'minLength': 1,
-        },
-    }
-
-    def load_data(self):
-        for key in self.source_keys:
-            with open('{}{}.js'.format(self.data_files_root, key), 'r') as file_object:
-                unfiltered_data = json.load(file_object, object_pairs_hook=OrderedDict)
-                self.data.extend([hs for hs in unfiltered_data if hs['size'] == 'huge'])
-
-
 class PilotsBuilder(OverrideMixin, XWingSchemaBuilder):
     source_keys = ('pilots',)
     target_key = 'pilots'
@@ -450,14 +275,17 @@ class PilotsBuilder(OverrideMixin, XWingSchemaBuilder):
 class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
     source_keys = ('ships',)
     target_key = 'ships'
-    title = 'Schema for small and large ships in ships data file'
+    title = 'Schema for ships data file'
+    preferred_order_tail = ['common', 'huge', 'non_huge']
 
-    fields = {
+    common = {
         'name': {
+            'type': 'string',
             'description': 'The ship\'s name as written on the card itself.',
             'minLength': 1,
         },
         'faction': {
+            'type': 'array',
             'description': 'A list of factions this ship belongs to.',
             'minItems': 1,
             'items': {
@@ -467,6 +295,7 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
             'uniqueItems': True,
         },
         'actions': {
+            'type': 'array',
             'description': 'A list of all the actions the ship is capable of.',
             'minItems': 0,
             'items': {
@@ -476,22 +305,35 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
             'uniqueItems': True,
         },
         'attack': {
+            'type': 'integer',
             'description': 'The ship\'s attack value.',
             'minimum': 0,
         },
         "agility": {
+            'type': 'integer',
             'description': 'The ship\'s agility value.',
             "minimum": 0,
         },
         "hull": {
+            'type': 'integer',
             'description': 'The ship\'s hull value.',
             "minimum": 0,
         },
         "shields": {
+            'type': 'integer',
             'description': 'The ship\'s shields value.',
             "minimum": 0,
         },
+        'xws': {
+            'type': 'string',
+            'description': 'The ship\'s unique XWS id as described in the XWS format.',
+            'minLength': 1,
+        },
+    }
+
+    small_large = {
         'maneuvers': {
+            'type': 'array',
             'description': 'The huge ship\s maneuvers.',
             'maxItems': 6,
             'minItems': 0,
@@ -546,10 +388,7 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                 },
             },
         },
-        'xws': {
-            'description': 'The ship\'s unique XWS id as described in the XWS format.',
-            'minLength': 1,
-        },
+
         'size': {
             'description': 'The ship\'s size.',
             'allOf': [
@@ -567,11 +406,194 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
         }
     }
 
-    def load_data(self):
-        for key in self.source_keys:
-            with open('{}{}.js'.format(self.data_files_root, key), 'r') as file_object:
-                unfiltered_data = json.load(file_object, object_pairs_hook=OrderedDict)
-                self.data.extend([hs for hs in unfiltered_data if hs['size'] != 'huge'])
+    huge = {
+        'energy': {
+            "type": "integer",
+            'description': 'The ship\'s energy value.',
+            'minimum': 1,
+        },
+        'epic_points': {
+            'description': 'The ship\'s epic points value, as described in the X-Wing Epic Play '
+                           'Tournament Rules.',
+            'type': 'number',
+            'minimum': 0,
+        },
+        'size': {
+            'description': 'The ship\'s size.',
+            'allOf': [
+                {
+                    'description': 'Ship size must be a valid size in size in the game.',
+                    '$ref': 'definitions.json#/definitions/size'
+                },
+                {
+                    'description': 'This schema only applies to huge ships.\n'
+                                   'Therefore, ship size is restricted to huge.',
+                    'type': 'string',
+                    'enum': ['huge', ]
+                },
+            ]
+        },
+        'maneuvers_energy': {
+            'type': 'array',
+            'description': 'The ship\s maneuvers energy costs.',
+            'maxItems': 6,
+            'minItems': 0,
+            'uniqueItems': False,
+            'items': {
+                'uniqueItems': False,
+                'description': 'Each element in this array contains a representation of the '
+                               'maneuver costs for the maneuvers available to the huge ship at a '
+                               'particular speed, determined its position in the array. ei. '
+                               '``ship.maneuvers_energy[1]`` will provide all '
+                               'maneuver cost for the maneuvers available to the huge ship at '
+                               'speed 1.\n'
+                               'This array\'s length should match the array\'s length of the '
+                               'array in the maneuvers property.\n'
+                               'In other words ``ship.maneuvers.length`` should equal to '
+                               '``ship.maneuvers_energy.length``.',
+                'type': 'array',
+                'maxItems': 6,
+                'minItems': 0,
+                'items': {
+                    'description': 'This array is a representation of a huge ship\' maneuvers '
+                                   'energy cost at a particular speed.\n'
+                                   '\n'
+                                   'Each value on this array references a different maneuver '
+                                   'depending on its index, which maps according to the following '
+                                   'list:\n'
+                                   '\t0 = Left Turn\n'
+                                   '\t1 = Left Bank\n'
+                                   '\t2 = Straight\n'
+                                   '\t3 = Right Bank\n'
+                                   '\t4 = Right Turn\n'
+                                   '\t5 = Koiogran Turn\n'
+                                   '\n'
+                                   'Possible values in this array range from 0 to 3 and indicate '
+                                   'the referenced maneuver\'s energy cost.\n'
+                                   '\n'
+                                   'This array\'s length should match the array\'s length of the '
+                                   'array in the maneuvers property at the same speed.\n'
+                                   'In other words ``ship.maneuvers[2].length`` should equal to '
+                                   '``ship.maneuvers_energy[2].length``.',
+                    'type': 'integer',
+                    'minimum': 0,
+                    'maximum': 3,
+                },
+            },
+        },
+        'maneuvers': {
+            'type': 'array',
+            'description': 'The huge ship\s maneuvers.',
+            'maxItems': 6,
+            'minItems': 0,
+            'uniqueItems': False,
+            'items': {
+                'uniqueItems': False,
+                'description': 'Each element in this array contains a representation of the '
+                               'maneuvers available to the ship at a particular speed, determined '
+                               'its position in the array. ei. ship.maneuvers[1] will provide all '
+                               'maneuvers available to said ship at speed 1.\n'
+                               'This array may be a short as required to provide accurate data, '
+                               'meaning that a missing speed \'index\' indicates that the ship is '
+                               'is not capable of such speed.',
+                'type': 'array',
+                'maxItems': 6,
+                'minItems': 0,
+                'items': {
+                    'description': 'This array is a representation of a huge ship\' maneuvers at a '
+                                   'particular speed.\n'
+                                   '\n'
+                                   'Each value on this array references a different maneuver '
+                                   'depending on its index, which maps according to the following '
+                                   'list:\n'
+                                   '\t0 = Left Turn\n'
+                                   '\t1 = Left Bank\n'
+                                   '\t2 = Straight\n'
+                                   '\t3 = Right Bank\n'
+                                   '\t4 = Right Turn\n'
+                                   '\t5 = Koiogran Turn\n'
+                                   '\n'
+                                   'Possible values in this array range from 0 to 1 and mean the '
+                                   'following:\n'
+                                   '\t0 = Maneuver unavailable\n'
+                                   '\t1 = Maneuver available\n'
+                                   '\n'
+                                   'This array may be a short as required to provide accurate '
+                                   'data, meaning that a missing value for a particular maneuver '
+                                   'type indicates that said maneuver is not available to that '
+                                   'particular huge ship at that particular speed.\n',
+                    'type': 'integer',
+                    'minimum': 0,
+                    'maximum': 1,
+                },
+            },
+        },
+    }
+
+    def build_schema(self):
+        self.schema = {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "title": self.title,
+            "id": "{}{}#".format(self.host, self.target_filename),
+            "definitions": {
+                'common': {
+                    'description': 'Fields used by all ships, regardless of size.',
+                    'type': 'object',
+                    'properties': self.common,
+                    'required': [
+                        "name",
+                        "faction",
+                        "agility",
+                        "hull",
+                        "shields",
+                        "actions",
+                        "xws"
+                    ]
+                },
+                'huge': {
+                    'description': 'Fields used by ships huge ships only.',
+                    'type': 'object',
+                    'properties': self.huge,
+                    'required': ['maneuvers', 'maneuvers_energy', 'size']
+                },
+                'non_huge': {
+                    'description': 'Fields used by small and large ships only.',
+                    'type': 'object',
+                    'properties': self.small_large,
+                    'required': ['maneuvers', 'size']
+                }
+            },
+            'type': 'object',
+            'allOf': [
+                {
+                    'description': 'Schema for common ship fields.',
+                    '$ref': '#/definitions/common',
+                },
+                {
+                    'anyOf': [
+                        {
+                            'description': 'Schema for huge ships.',
+                            '$ref': '#/definitions/huge'
+                        },
+                        {
+                            'description': 'Schema for small and large ships.',
+                            '$ref': '#/definitions/non_huge'
+                        }
+                    ]
+                }
+            ],
+        }
+
+    def __init__(self, shared_definitions):
+        self.build_schema()
+        self.properties_order = []
+        self.data = []
+        self.load_data()
+        self.shared_definitions = shared_definitions
+        self.gather_definitions()
+        self.gather_properties_order()
+        self.save_schema()
+
 
 
 class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):
@@ -849,7 +871,6 @@ if __name__ == '__main__':
     sd = SharedDefinitionsBuilder()
 
     builders = [
-        HugeShipsBuilder,
         ShipsBuilder,
         PilotsBuilder,
         UpgradesBuilder,

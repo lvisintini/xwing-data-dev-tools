@@ -101,7 +101,7 @@ class SchemaBuilder:
     def build_schema(self):
         self.schema = {
             "$schema": "http://json-schema.org/draft-04/schema#",
-            "title" : self.title,
+            "title": self.title,
             "id": "{}{}#".format(self.host, self.target_filename),
             "definitions": self.local_definitions,
         }
@@ -111,7 +111,6 @@ class SchemaBuilder:
             d.get('type') == 'object',
             'properties' in d
         ])
-
         for attr in d:
             if d[attr].__class__ == dict:
                 if is_schema and attr == 'properties':
@@ -127,7 +126,9 @@ class SchemaBuilder:
         d = OrderedDict(
             sorted(
                 d.items(),
-                key=lambda x: order.index(x[0]) if order else self.preferred_order.index(x[0])
+                key=lambda x: order.index(x[0]) if order else (
+                    self.preferred_order + self.preferred_order_tail
+                ).index(x[0])
             )
         )
         return d
@@ -142,6 +143,7 @@ class XWingSchemaBuilder(SchemaBuilder):
     source_keys = ()
     fields = {}
     properties_order_tail = []
+    preferred_order_tail = []
     not_required = ['image', ]
 
     def __init__(self, shared_definitions):
