@@ -1,5 +1,6 @@
-from collections import OrderedDict
-from base import XWingDataNormalizer, MultipleXWingDataNormalizer, MemoryLoader
+from XwingDataDevTools.normalize.base import (
+    XWingDataNormalizer, MultipleXWingDataNormalizer, MemoryLoader
+)
 
 
 class AddModelIds(MemoryLoader, XWingDataNormalizer):
@@ -13,8 +14,8 @@ class AddModelIds(MemoryLoader, XWingDataNormalizer):
     def analise(self):
         ids = [model['id'] for model in self.data if 'id' in model]
         ids.extend(self.memory.values())
-        self.max_id = max(*ids)
-        self.min_id = min(*ids)
+        self.max_id = max(*ids) if len(ids) else None
+        self.min_id = min(*ids) if len(ids) else None
         print('Memory', self.memory)
         print('Memory length', len(self.memory))
         print('Max id', self.max_id)
@@ -74,12 +75,12 @@ class RefreshIdsUsingNames(MultipleXWingDataNormalizer):
 
 class AddShipsIds(AddModelIds):
     source_key = 'ships'
-    memory_url = 'https://raw.githubusercontent.com/lvisintini/xwing-data/master/data/ships.js'
+    #memory_url = 'https://raw.githubusercontent.com/lvisintini/xwing-data/master/data/ships.js'
 
 
 if __name__ == '__main__':
     print('AddShipsIds')
     AddShipsIds()
 
-    print('RefreshIdsUsingNames')
-    RefreshIdsUsingNames()
+    #print('RefreshIdsUsingNames')
+    #RefreshIdsUsingNames()

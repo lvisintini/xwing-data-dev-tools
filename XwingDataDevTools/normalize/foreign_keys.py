@@ -1,7 +1,7 @@
 import json
 from collections import OrderedDict
 
-from base import XWingDataNormalizer
+from XwingDataDevTools.normalize.base import XWingDataNormalizer
 
 
 class ForeignKeyNormalization(XWingDataNormalizer):
@@ -304,20 +304,42 @@ class UpgradeConditionsForeignKeyNormalization(SimpleForeignKeyNormalization):
 
             self.set_fk_field(model, new_fk)
 
+
+class UpgradeShipsForeignKeyNormalization(SimpleForeignKeyNormalization):
+    source_key = 'upgrades'
+    fk_source_key = 'ships'
+    fk_field_path = ['ship', ]
+    pk_name = 'ship_id'
+
+    def normalize(self):
+        for model in self.data:
+            current_fk_field = self.get_fk_field(model)
+            if current_fk_field is None:
+                continue
+
+            new_fk = []
+            for fk in current_fk_field:
+                new_fk.append(self.construct_new_fk(fk, model))
+
+            self.set_fk_field(model, new_fk)
+
 if __name__ == '__main__':
-    print('SourceShipsForeignKeyNormalization')
-    SourceShipsForeignKeyNormalization()
-    print('SourceUpgradesForeignKeyNormalization')
-    SourceUpgradesForeignKeyNormalization()
-    print('SourceConditionsForeignKeyNormalization')
-    SourceConditionsForeignKeyNormalization()
-    print('SourcePilotsForeignKeyNormalization')
-    SourcePilotsForeignKeyNormalization()
+    pass
+    #print('SourceShipsForeignKeyNormalization')
+    #SourceShipsForeignKeyNormalization()
+    #print('SourceUpgradesForeignKeyNormalization')
+    #SourceUpgradesForeignKeyNormalization()
+    #print('SourceConditionsForeignKeyNormalization')
+    #SourceConditionsForeignKeyNormalization()
+    #print('SourcePilotsForeignKeyNormalization')
+    #SourcePilotsForeignKeyNormalization()
 
-    print('UpgradeConditionsForeignKeyNormalization')
-    UpgradeConditionsForeignKeyNormalization()
+    #print('UpgradeConditionsForeignKeyNormalization')
+    #UpgradeConditionsForeignKeyNormalization()
+    #print('UpgradeShipsForeignKeyNormalization')
+    #UpgradeShipsForeignKeyNormalization()
 
-    print('PilotConditionsForeignKeyNormalization')
-    PilotConditionsForeignKeyNormalization()
-    print('PilotShipForeignKeyNormalization')
-    PilotShipForeignKeyNormalization()
+    #print('PilotConditionsForeignKeyNormalization')
+    #PilotConditionsForeignKeyNormalization()
+    #print('PilotShipForeignKeyNormalization')
+    #PilotShipForeignKeyNormalization()

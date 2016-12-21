@@ -540,6 +540,12 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                     'description': 'Fields used by all ships, regardless of size.',
                     'type': 'object',
                     'properties': self.common,
+                    'additionalProperties': False,
+                },
+                'huge': {
+                    'description': 'Fields used by ships huge ships only.',
+                    'type': 'object',
+                    'properties': self.huge,
                     'required': [
                         "name",
                         "faction",
@@ -547,40 +553,56 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                         "hull",
                         "shields",
                         "actions",
-                        "xws"
+                        "xws",
+                        'maneuvers',
+                        'maneuvers_energy',
+                        'size'
                     ]
-                },
-                'huge': {
-                    'description': 'Fields used by ships huge ships only.',
-                    'type': 'object',
-                    'properties': self.huge,
-                    'required': ['maneuvers', 'maneuvers_energy', 'size']
                 },
                 'non_huge': {
                     'description': 'Fields used by small and large ships only.',
                     'type': 'object',
                     'properties': self.small_large,
-                    'required': ['maneuvers', 'size']
+                    'required': [
+                        "name",
+                        "faction",
+                        "agility",
+                        "attack",
+                        "hull",
+                        "shields",
+                        "actions",
+                        "xws",
+                        'maneuvers',
+                        'size'
+                    ]
                 }
             },
             'type': 'object',
-            'allOf': [
+            'anyOf': [
                 {
-                    'description': 'Schema for common ship fields.',
-                    '$ref': '#/definitions/common',
-                },
-                {
-                    'anyOf': [
-                        {
+                    "$merge": {
+                        "source": {
+                            'description': 'Schema for common ship fields.',
+                            '$ref': '#/definitions/common',
+                        },
+                        "with":  {
                             'description': 'Schema for huge ships.',
                             '$ref': '#/definitions/huge'
+                        }
+                    }
+                },
+                {
+                    "$merge": {
+                        "source": {
+                            'description': 'Schema for common ship fields.',
+                            '$ref': '#/definitions/common',
                         },
-                        {
+                        "with":                          {
                             'description': 'Schema for small and large ships.',
                             '$ref': '#/definitions/non_huge'
                         }
-                    ]
-                }
+                    }
+                },
             ],
         }
 

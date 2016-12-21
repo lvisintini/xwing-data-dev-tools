@@ -2,7 +2,7 @@ import _ctypes
 import json
 import re
 
-from base import XWingDataNormalizer
+from XwingDataDevTools.normalize.base import XWingDataNormalizer
 
 # http://stackoverflow.com/questions/13249415/can-i-implement-custom-indentation-for-pretty-printing-in-python-s-json-module
 
@@ -56,7 +56,7 @@ class SameLineData(XWingDataNormalizer):
             )
 
 
-class SameLineManeuverNormalizer(SameLineData):
+class SameLineShipsNormalizer(SameLineData):
     source_key = 'ships'
 
     def normalize(self):
@@ -106,17 +106,16 @@ class SameLineUpgradesNormalizer(SameLineData):
         for model in self.data:
             if 'conditions' in model:
                 model['conditions'] = [NoIndent(cond) for cond in model['conditions']]
+            if 'ship' in model:
+                model['ship'] = [NoIndent(cond) for cond in model['ship']]
+
+
+def same_line_indent():
+    SameLineShipsNormalizer()
+    SameLineSourcesNormalizer()
+    SameLinePilotsNormalizer()
+    SameLineUpgradesNormalizer()
 
 
 if __name__ == '__main__':
-    print('SameLineManeuverNormalizer')
-    SameLineManeuverNormalizer()
-
-    print('SameLineSourcesNormalizer')
-    SameLineSourcesNormalizer()
-
-    print('SameLinePilotsNormalizer')
-    SameLinePilotsNormalizer()
-
-    print('SameLineUpgradesNormalizer')
-    SameLineUpgradesNormalizer()
+    same_line_indent()

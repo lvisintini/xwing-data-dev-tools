@@ -2,30 +2,6 @@ import json
 from collections import OrderedDict
 from pprint import pprint
 
-# FIXME
-# xws definition = redo all names -> maybe -> maybe a separate app that links the xws repo to the data repo
-
-# FIXME
-# Asteroids
-# Attributes order in the data. define one.
-
-# FIXME
-# New project ultimate Game references merging LearToPlay, game reference and FAQ with errata
-# Schema to doc
-
-
-# FIXME
-# Mark cards with errata.
-# Errata up to date.
-# Card Clarifications.
-# source.release date
-# Add text for nameless pilots (pilot_hability, flavour_text)
-# product line and wave number instead of wave
-# new way of doing grants (like source contents)
-# upgrade.conditions
-# upgrade.ship
-# https://gist.github.com/guidokessels/5e895c4e5cd882ceb4df57c56fda9cce
-
 
 class SchemaBuilder:
     data_files_root = '/home/lvisintini/src/xwing-data/data/'
@@ -55,6 +31,9 @@ class SchemaBuilder:
         'allOf',
         'anyOf',
         'not',
+        '$merge',
+        'source',
+        'with',
         'enum',
         'minLength',
         'maxLength',

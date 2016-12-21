@@ -1,4 +1,4 @@
-from base import XWingDataNormalizer
+from XwingDataDevTools.normalize.base import XWingDataNormalizer
 
 
 class ManeuverNormalizer(XWingDataNormalizer):
