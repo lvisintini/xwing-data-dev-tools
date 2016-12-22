@@ -1,5 +1,7 @@
 import json
+import datetime
 from collections import OrderedDict
+from pprint import pprint
 
 import requests
 
@@ -80,3 +82,74 @@ class MemoryLoader:
                 if 'id' in m:
                     self.memory[m['name']] = m['id']
             print('Loading Memory...Done!')
+
+
+class DataCollector(XWingDataNormalizer):
+    memory = {}
+    field_name = None
+
+    def __init__(self):
+        super().__init__()
+
+    def analise(self):
+        pprint(self.memory)
+
+    @staticmethod
+    def print_model(model):
+        print('\n' + model['name'])
+
+    def input_text(self):
+        return 'Which {} should it have?\nResponse (leave empty to skip): '.format(self.field_name)
+
+    def clean_input(self):
+        raise NotImplementedError
+
+    def validate_input(self):
+        raise NotImplementedError
+
+    def normalize(self):
+        for model in self.data:
+            if self.field_name not in model:
+                if model.get('id') in self.memory:
+                    model[self.field_name] = self.memory[model.get('id')]
+                    continue
+
+                self.print_model(model)
+                new_data = None
+
+                while not self.validate_input(new_data):
+                    if new_data is not None:
+                        print('No. That value is not right!. Try again...')
+                    new_data = input(self.input_text())
+                    if not new_data:
+                        break
+
+                    new_data = self.clean_input(new_data)
+
+                else:
+                    model[self.field_name] = new_data
+                    self.memory[model['id']] = new_data
+        print('Done!!')
+
+
+class DateDataCollector(DataCollector):
+    input_format = None
+    output_format = None
+
+    def clean_input(self, new_data):
+        try:
+            new_data = datetime.datetime.strptime(new_data, self.input_format).date().isoformat()
+        except:
+            pass
+        else:
+            return new_data
+        return new_data
+
+    def validate_input(self, new_data):
+        try:
+            datetime.datetime.strptime(new_data, self.output_format).date()
+        except:
+            pass
+        else:
+            return True
+        return False

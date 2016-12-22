@@ -107,7 +107,11 @@ class SameLineUpgradesNormalizer(SameLineData):
             if 'conditions' in model:
                 model['conditions'] = [NoIndent(cond) for cond in model['conditions']]
             if 'ship' in model:
-                model['ship'] = [NoIndent(cond) for cond in model['ship']]
+                model['ship'] = [NoIndent(ship) for ship in model['ship']]
+            if 'ships' in model:
+                model['ships'] = [NoIndent(ship) for ship in model['ships']]
+            if 'grants' in model:
+                model['grants'] = [NoIndent(grant) for grant in model['grants']]
 
 
 def same_line_indent():

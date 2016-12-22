@@ -305,7 +305,7 @@ class UpgradeConditionsForeignKeyNormalization(SimpleForeignKeyNormalization):
             self.set_fk_field(model, new_fk)
 
 
-class UpgradeShipsForeignKeyNormalization(SimpleForeignKeyNormalization):
+class UpgradeShipForeignKeyNormalization(SimpleForeignKeyNormalization):
     source_key = 'upgrades'
     fk_source_key = 'ships'
     fk_field_path = ['ship', ]
@@ -322,6 +322,11 @@ class UpgradeShipsForeignKeyNormalization(SimpleForeignKeyNormalization):
                 new_fk.append(self.construct_new_fk(fk, model))
 
             self.set_fk_field(model, new_fk)
+
+
+class UpgradeShipsForeignKeyNormalization(UpgradeShipForeignKeyNormalization):
+    fk_field_path = ['ships', ]
+
 
 if __name__ == '__main__':
     pass

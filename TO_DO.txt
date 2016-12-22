@@ -14,13 +14,6 @@
 # Mark cards with errata.
 # Errata up to date.
 # Card Clarifications.
-# source.release date
 # Add text for nameless pilots (pilot_hability, flavour_text)
 # product line and wave number instead of wave
-# new way of doing grants (like source contents)
 # https://gist.github.com/guidokessels/5e895c4e5cd882ceb4df57c56fda9cce
-
-# sources.ship to sources.ships (preserve order)
-# ships.faction to ships.factions (preserve order)
-
-# Select order attribute

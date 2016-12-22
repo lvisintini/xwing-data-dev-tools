@@ -1,8 +1,12 @@
-from XwingDataDevTools.normalize import foreign_keys, trivial, maneuvers, ids, custom_indentation
+from XwingDataDevTools.normalize import (
+    foreign_keys, maneuvers, ids, custom_indentation, order, rename, gather
+)
 
 
-def main():
+def main(order_fields=False):
     ids.AddShipsIds()
+
+    rename.FieldRenamer()
 
     maneuvers.HugeShipManeuverNormalizer()
     maneuvers.LargeShipManeuverNormalizer()
@@ -14,15 +18,21 @@ def main():
     foreign_keys.SourcePilotsForeignKeyNormalization()
 
     foreign_keys.UpgradeConditionsForeignKeyNormalization()
-    foreign_keys.UpgradeShipsForeignKeyNormalization()
+    foreign_keys.UpgradeShipForeignKeyNormalization()
+    foreign_keys.UpgradeShipsForeignKeyNormalization()  # In case it has been renamed
 
     foreign_keys.PilotConditionsForeignKeyNormalization()
     foreign_keys.PilotShipForeignKeyNormalization()
 
-    trivial.AddMissingSlots()
+    gather.AddMissingSlots()
+    gather.AddMissingAnnouncedDate()
+    gather.AddMissingReleaseDate()
+
+    if order_fields:
+        order.set_preferred_order()
 
     custom_indentation.same_line_indent()
 
 
 if __name__ == '__main__':
-    main()
+    main(False)
