@@ -1,9 +1,9 @@
 from collections import OrderedDict
 
-from XwingDataDevTools.normalize.base import MultipleXWingDataNormalizer
+from XwingDataDevTools.normalize.base import MultipleDataNormalizer
 
 
-class FieldRenamer(MultipleXWingDataNormalizer):
+class FieldRenamer(MultipleDataNormalizer):
     source_keys = ['ships', 'upgrades']
 
     mapping = {
@@ -15,10 +15,6 @@ class FieldRenamer(MultipleXWingDataNormalizer):
             'ship': 'ships',
         }
     }
-
-    @staticmethod
-    def analise():
-        print('Nothing to print')
 
     def normalize(self):
         for sk in self.source_keys:

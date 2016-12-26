@@ -1,10 +1,10 @@
 import json
 from collections import OrderedDict
 
-from XwingDataDevTools.normalize.base import XWingDataNormalizer
+from XwingDataDevTools.normalize.base import SingleDataAnalyticalNormalizer
 
 
-class ForeignKeyNormalization(XWingDataNormalizer):
+class ForeignKeyNormalization(SingleDataAnalyticalNormalizer):
     fk_source_key = None
     fk_field_path = None
     pk_name = None
@@ -175,7 +175,7 @@ class SourceShipsForeignKeyNormalization(SourceContentsForeignKeyNormalization):
     fk_field_path = ['contents', 'ships']
     pk_name = 'ship_id'
 
-    amounts={
+    amounts = {
         0: {'TIE Fighter': 2, 'X-Wing': 1},
         1: {'X-Wing': 1},
         2: {'Y-Wing': 1},
@@ -329,22 +329,11 @@ class UpgradeShipsForeignKeyNormalization(UpgradeShipForeignKeyNormalization):
 
 
 if __name__ == '__main__':
-    pass
-    #print('SourceShipsForeignKeyNormalization')
-    #SourceShipsForeignKeyNormalization()
-    #print('SourceUpgradesForeignKeyNormalization')
-    #SourceUpgradesForeignKeyNormalization()
-    #print('SourceConditionsForeignKeyNormalization')
-    #SourceConditionsForeignKeyNormalization()
-    #print('SourcePilotsForeignKeyNormalization')
-    #SourcePilotsForeignKeyNormalization()
-
-    #print('UpgradeConditionsForeignKeyNormalization')
-    #UpgradeConditionsForeignKeyNormalization()
-    #print('UpgradeShipsForeignKeyNormalization')
-    #UpgradeShipsForeignKeyNormalization()
-
-    #print('PilotConditionsForeignKeyNormalization')
-    #PilotConditionsForeignKeyNormalization()
-    #print('PilotShipForeignKeyNormalization')
-    #PilotShipForeignKeyNormalization()
+    SourceShipsForeignKeyNormalization()
+    SourceUpgradesForeignKeyNormalization()
+    SourceConditionsForeignKeyNormalization()
+    SourcePilotsForeignKeyNormalization()
+    UpgradeConditionsForeignKeyNormalization()
+    UpgradeShipsForeignKeyNormalization()
+    PilotConditionsForeignKeyNormalization()
+    PilotShipForeignKeyNormalization()

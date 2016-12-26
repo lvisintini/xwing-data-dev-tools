@@ -342,9 +342,9 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                 'uniqueItems': False,
                 'description': 'Each element in this array contains a representation of the '
                                'maneuvers available to the ship at a particular speed, determined '
-                               'its position in the array. ei. ship.maneuvers[1] will provide all '
-                               'maneuvers available to said ship at speed 1.\n'
-                               'This array may be a short as required to provide accurate data, '
+                               'by its position in the array. ei. ship.maneuvers[1] will provide '
+                               'all maneuvers available to said ship at speed 1.\n'
+                               'This array may be as short as required to provide accurate data, '
                                'meaning that a missing speed \'index\' indicates that the ship is '
                                'is not capable of such speed.',
                 'type': 'array',
@@ -378,7 +378,7 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                                    '\t2 = Green maneuver\n'
                                    '\t3 = Red maneuver\n'
                                    '\n'
-                                   'This array may be a short as required to provide accurate '
+                                   'This array may be as short as required to provide accurate '
                                    'data, meaning that a missing value for a particular maneuver '
                                    'type indicates that said maneuver is not available to that '
                                    'particular ship at that particular speed.\n.',
@@ -443,7 +443,7 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                 'uniqueItems': False,
                 'description': 'Each element in this array contains a representation of the '
                                'maneuver costs for the maneuvers available to the huge ship at a '
-                               'particular speed, determined its position in the array. ei. '
+                               'particular speed, determined by its position in the array. ei. '
                                '``ship.maneuvers_energy[1]`` will provide all '
                                'maneuver cost for the maneuvers available to the huge ship at '
                                'speed 1.\n'
@@ -491,9 +491,9 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                 'uniqueItems': False,
                 'description': 'Each element in this array contains a representation of the '
                                'maneuvers available to the ship at a particular speed, determined '
-                               'its position in the array. ei. ship.maneuvers[1] will provide all '
-                               'maneuvers available to said ship at speed 1.\n'
-                               'This array may be a short as required to provide accurate data, '
+                               'by its position in the array. ei. ship.maneuvers[1] will provide '
+                               'all maneuvers available to said ship at speed 1.\n'
+                               'This array may be as short as required to provide accurate data, '
                                'meaning that a missing speed \'index\' indicates that the ship is '
                                'is not capable of such speed.',
                 'type': 'array',
@@ -518,7 +518,7 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                                    '\t0 = Maneuver unavailable\n'
                                    '\t1 = Maneuver available\n'
                                    '\n'
-                                   'This array may be a short as required to provide accurate '
+                                   'This array may be as short as required to provide accurate '
                                    'data, meaning that a missing value for a particular maneuver '
                                    'type indicates that said maneuver is not available to that '
                                    'particular huge ship at that particular speed.\n',
@@ -615,7 +615,6 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
         self.gather_definitions()
         self.gather_properties_order()
         self.save_schema()
-
 
 
 class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):

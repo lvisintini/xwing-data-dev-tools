@@ -1,10 +1,10 @@
 from pprint import pprint
 from collections import OrderedDict
 
-from XwingDataDevTools.normalize.base import XWingDataNormalizer
+from XwingDataDevTools.normalize.base import SingleDataAnalyticalNormalizer
 
 
-class OrderNormalizer(XWingDataNormalizer):
+class OrderNormalizer(SingleDataAnalyticalNormalizer):
     def analise(self):
         fields = set()
         for model in self.data:

@@ -2,7 +2,7 @@ import _ctypes
 import json
 import re
 
-from XwingDataDevTools.normalize.base import XWingDataNormalizer
+from XwingDataDevTools.normalize.base import SingleDataNormalizer
 
 # http://stackoverflow.com/questions/13249415/can-i-implement-custom-indentation-for-pretty-printing-in-python-s-json-module
 
@@ -40,14 +40,10 @@ class NoIndentEncoder(json.JSONEncoder):
         return result
 
 
-class SameLineData(XWingDataNormalizer):
+class SameLineData(SingleDataNormalizer):
     @staticmethod
     def filter(model):
         raise True
-
-    @staticmethod
-    def analise():
-        print('No data to show')
 
     def save_data(self):
         with open('{}/{}.js'.format(self.root, self.source_key), 'w') as file_object:

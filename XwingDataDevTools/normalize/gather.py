@@ -1,8 +1,8 @@
-from XwingDataDevTools.normalize.base import (DataCollector, DateDataCollector)
+from XwingDataDevTools.normalize.base import (SingleDataCollector, DateDataCollector)
 from pprint import pprint
 
 
-class AddMissingSlots(DataCollector):
+class AddMissingSlots(SingleDataCollector):
     source_key = 'upgrades'
     field_name = 'slot'
 
@@ -163,10 +163,6 @@ class AddMissingAnnouncedDate(DateDataCollector):
     }
 
 if __name__ == '__main__':
-    pass
-    #print('AddMissingSlots')
-    #AddMissingSlots()
-    #print('AddMissingReleaseDate')
-    #AddMissingReleaseDate()
-    #print('AddMissingAnnouncedDate')
-    #AddMissingAnnouncedDate()
+    AddMissingSlots()
+    AddMissingReleaseDate()
+    AddMissingAnnouncedDate()

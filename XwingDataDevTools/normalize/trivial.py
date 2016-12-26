@@ -1,7 +1,11 @@
-from XwingDataDevTools.normalize.base import  MultipleXWingDataNormalizer
+from pprint import pprint
+
+from XwingDataDevTools.normalize.base import (
+    MultipleDataAnalyticalNormalizer, MultipleDataAnalyzer, SingleDataAnalyzer
+)
 
 
-class RangeToString(MultipleXWingDataNormalizer):
+class RangeToString(MultipleDataAnalyticalNormalizer):
     source_keys = ['upgrades', 'ships']
 
     def analise(self):
@@ -30,7 +34,7 @@ class RangeToString(MultipleXWingDataNormalizer):
                     model['range'] = str(model['range'])
 
 
-class AttackToInt(MultipleXWingDataNormalizer):
+class AttackToInt(MultipleDataAnalyticalNormalizer):
     source_keys = ['upgrades', 'ships', 'pilots']
 
     def analise(self):
@@ -66,7 +70,7 @@ class AttackToInt(MultipleXWingDataNormalizer):
                         model['attack'] = int(model['attack'])
 
 
-class EnergyToInt(MultipleXWingDataNormalizer):
+class EnergyToInt(MultipleDataAnalyticalNormalizer):
     source_keys = ['upgrades', 'ships']
 
     def analise(self):
@@ -95,13 +99,35 @@ class EnergyToInt(MultipleXWingDataNormalizer):
                     model['energy'] = int(model['energy'])
 
 
+class IconList(MultipleDataAnalyzer):
+    source_keys = [
+        'upgrades', 'ships', 'pilots', 'conditions', 'damage-deck-core', 'damage-deck-core-tfa',
+    ]
+
+    def analise(self):
+        import re
+        icons = []
+        reg = re.compile(r'\[.*?\]')
+        for key in self.data.keys():
+            for model in self.data[key]:
+                for t in ['text', 'effect']:
+                    icons.extend(reg.findall(model.get(t,'')))
+        print(set(icons))
+
+
+class ShipNames(SingleDataAnalyzer):
+    source_key = 'ships'
+
+    def analise(self):
+        names = []
+        for model in self.data:
+            names.append(model.get('name'))
+        pprint(names)
+
 if __name__ == '__main__':
     pass
-    print('RangeToString')
     RangeToString()
-
-    print('Attack')
     AttackToInt()
-
-    print('EnergyToInt')
     EnergyToInt()
+    IconList()
+    ShipNames()

@@ -3,14 +3,89 @@ import datetime
 from collections import OrderedDict
 from pprint import pprint
 
-import requests
 
-
-class XWingDataNormalizer:
-    source_key = ''
+class XWingDataBaseMixin:
     root = '/home/lvisintini/src/xwing-data/data'
 
+
+class ToolBase:
     def __init__(self):
+        self.print_name()
+
+    def print_name(self):
+        print('\n{} {}'.format(self.__class__.__name__, '=' * (100 - len(self.__class__.__name__))))
+
+
+class SingleDataLoaderMixin:
+    source_key = ''
+
+    def load_data(self):
+        with open('{}/{}.js'.format(self.root, self.source_key), 'r') as file_object:
+            self.data.extend(json.load(file_object, object_pairs_hook=OrderedDict))
+
+
+class SingleDataSaverMixin:
+    source_key = ''
+
+    def save_data(self):
+        with open('{}/{}.js'.format(self.root, self.source_key), 'w') as file_object:
+            json.dump(self.data, file_object, indent=2, ensure_ascii=False)
+
+
+class MultipleDataLoaderMixin:
+    source_keys = []
+
+    def load_all_data(self):
+        for sk in self.source_keys:
+            self.load_data(sk)
+
+    def load_data(self, source_key):
+        with open('{}/{}.js'.format(self.root, source_key), 'r') as file_object:
+            self.data[source_key] = json.load(file_object, object_pairs_hook=OrderedDict)
+
+
+class MultipleDataSaverMixin:
+    source_keys = []
+
+    def save_all_data(self):
+        for sk in self.source_keys:
+            self.save_data(sk)
+
+    def save_data(self, source_key):
+        with open('{}/{}.js'.format(self.root, source_key), 'w') as file_object:
+            json.dump(self.data[source_key], file_object, indent=2, ensure_ascii=False)
+
+
+class SingleDataAnalyzer(SingleDataLoaderMixin, XWingDataBaseMixin, ToolBase):
+    def __init__(self):
+        super().__init__()
+        self.data = []
+        self.load_data()
+        self.analise()
+
+    def analise(self):
+        raise NotImplementedError
+
+
+class SingleDataNormalizer(
+    SingleDataSaverMixin, SingleDataLoaderMixin, XWingDataBaseMixin, ToolBase
+):
+    def __init__(self):
+        super().__init__()
+        self.data = []
+        self.load_data()
+        self.normalize()
+        self.save_data()
+
+    def normalize(self):
+        raise NotImplementedError
+
+
+class SingleDataAnalyticalNormalizer(
+    SingleDataSaverMixin, SingleDataLoaderMixin, XWingDataBaseMixin, ToolBase
+):
+    def __init__(self):
+        super().__init__()
         self.data = []
         self.load_data()
         print('BEFORE --------')
@@ -20,14 +95,6 @@ class XWingDataNormalizer:
         self.analise()
         self.save_data()
 
-    def load_data(self):
-        with open('{}/{}.js'.format(self.root, self.source_key), 'r') as file_object:
-            self.data.extend(json.load(file_object, object_pairs_hook=OrderedDict))
-
-    def save_data(self):
-        with open('{}/{}.js'.format(self.root, self.source_key), 'w') as file_object:
-            json.dump(self.data, file_object, indent=2, ensure_ascii=False)
-
     def analise(self):
         raise NotImplementedError
 
@@ -35,29 +102,44 @@ class XWingDataNormalizer:
         raise NotImplementedError
 
 
-class MultipleXWingDataNormalizer:
-    source_keys = []
-    root = '/home/lvisintini/src/xwing-data/data'
-
+class MultipleDataAnalyzer(MultipleDataLoaderMixin, XWingDataBaseMixin, ToolBase):
     def __init__(self):
+        super().__init__()
         self.data = {}
-        for sk in self.source_keys:
-            self.load_data(sk)
+        self.load_all_data()
+        self.analise()
+
+    def analise(self):
+        raise NotImplementedError
+
+
+class MultipleDataNormalizer(
+    MultipleDataSaverMixin, MultipleDataLoaderMixin, XWingDataBaseMixin, ToolBase
+):
+    def __init__(self):
+        super().__init__()
+        self.data = {}
+        self.load_all_data()
+        self.normalize()
+        self.save_all_data()
+
+    def normalize(self):
+        raise NotImplementedError
+
+
+class MultipleDataAnalyticalNormalizer(
+    MultipleDataSaverMixin, MultipleDataLoaderMixin, XWingDataBaseMixin, ToolBase
+):
+    def __init__(self):
+        super().__init__()
+        self.data = {}
+        self.load_all_data()
         print('BEFORE --------')
         self.analise()
         self.normalize()
         print('\nAFTER ---------')
         self.analise()
-        for sk in self.source_keys:
-            self.save_data(sk)
-
-    def load_data(self, source_key):
-        with open('{}/{}.js'.format(self.root, source_key), 'r') as file_object:
-            self.data[source_key] = json.load(file_object, object_pairs_hook=OrderedDict)
-
-    def save_data(self, source_key):
-        with open('{}/{}.js'.format(self.root, source_key), 'w') as file_object:
-            json.dump(self.data[source_key], file_object, indent=2, ensure_ascii=False)
+        self.save_all_data()
 
     def analise(self):
         raise NotImplementedError
@@ -66,30 +148,23 @@ class MultipleXWingDataNormalizer:
         raise NotImplementedError
 
 
-class MemoryLoader:
-    memory_url = None
+class SingleDataCollector(
+    SingleDataSaverMixin, SingleDataLoaderMixin, XWingDataBaseMixin, ToolBase
+):
 
-    def __init__(self):
-        self.memory = {}
-        self.load_memory()
-        super().__init__()
-
-    def load_memory(self):
-        if self.memory_url:
-            print('Loading Memory...')
-            response = requests.get(self.memory_url)
-            for m in response.json():
-                if 'id' in m:
-                    self.memory[m['name']] = m['id']
-            print('Loading Memory...Done!')
-
-
-class DataCollector(XWingDataNormalizer):
-    memory = {}
     field_name = None
+    memory = {}
 
     def __init__(self):
         super().__init__()
+        self.data = []
+        self.load_data()
+        print('BEFORE --------')
+        self.analise()
+        self.gather()
+        print('\nAFTER ---------')
+        self.analise()
+        self.save_data()
 
     def analise(self):
         pprint(self.memory)
@@ -101,13 +176,13 @@ class DataCollector(XWingDataNormalizer):
     def input_text(self):
         return 'Which {} should it have?\nResponse (leave empty to skip): '.format(self.field_name)
 
-    def clean_input(self):
+    def clean_input(self, new_data):
         raise NotImplementedError
 
-    def validate_input(self):
+    def validate_input(self, new_data):
         raise NotImplementedError
 
-    def normalize(self):
+    def gather(self):
         for model in self.data:
             if self.field_name not in model:
                 if model.get('id') in self.memory:
@@ -132,7 +207,7 @@ class DataCollector(XWingDataNormalizer):
         print('Done!!')
 
 
-class DateDataCollector(DataCollector):
+class DateDataCollector(SingleDataCollector):
     input_format = None
     output_format = None
 

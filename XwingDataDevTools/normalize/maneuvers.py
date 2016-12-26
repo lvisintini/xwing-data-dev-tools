@@ -1,7 +1,7 @@
-from XwingDataDevTools.normalize.base import XWingDataNormalizer
+from XwingDataDevTools.normalize.base import SingleDataAnalyticalNormalizer
 
 
-class ManeuverNormalizer(XWingDataNormalizer):
+class ManeuverNormalizer(SingleDataAnalyticalNormalizer):
     source_key = 'ships'
 
     min_maneuvers_override = 13
@@ -140,9 +140,6 @@ class HugeShipManeuverNormalizer(ManeuverNormalizer):
 
 
 if __name__ == '__main__':
-    print('SmallShipManeuverNormalizer')
     SmallShipManeuverNormalizer()
-    print('\n\nLargeShipManeuverNormalizer')
     LargeShipManeuverNormalizer()
-    print('\n\nHugeShipManeuverNormalizer')
     HugeShipManeuverNormalizer()

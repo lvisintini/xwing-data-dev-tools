@@ -8,6 +8,7 @@
 # FIXME
 # New project ultimate Game references merging LearToPlay, game reference and FAQ with errata
 # Schema to doc
+# Python django Models to json schema
 
 
 # FIXME
@@ -17,3 +18,27 @@
 # Add text for nameless pilots (pilot_hability, flavour_text)
 # product line and wave number instead of wave
 # https://gist.github.com/guidokessels/5e895c4e5cd882ceb4df57c56fda9cce
+
+# FIXME Tests
+# Ship factions makes sure data is correct by checking all pilots faction.
+# All Pilots have ships.
+# No orphans from sources.
+# Release date + released match up.
+# announcement date is < release date.
+# huge ship maneuvers and maneuvers energy map correctly
+
+# FIXME
+# Icons should be ordered
+# icon consistency (turn instead of hard)
+# icons demostrattion is not complete
+# Missing resistance Icon
+
+# FIXME
+# Add dagger to fonts
+
+
+# repo that linkx xwing data with other projects (icons and XWS, rules) -> npm package
+# Ships second names?
+# MIssing icon for UWING
+
+# CONTACTOS PARA LUCHO
