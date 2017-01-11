@@ -43,14 +43,20 @@ class SharedDefinitionsBuilder(OverrideMixin, SchemaBuilder):
             'type': 'string',
             'enum': [],
         },
-        'file_path': {
-            'description': 'A file path',
+        'image_file_path': {
+            'description': 'A file path for an image in this package.',
             'type': 'string',
-            'pattern': '^[a-zA-Z\(\)\.0-9_-]([a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?'
-                       '(\/[a-zA-Z\(\)\.0-9_-]([a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?)*'
-                       '.[a-z0-9]{3}$'
-            # https://regex101.com/r/0Tt5mC/5 for tests
+            'pattern': '^(?:conditions|pilots|factions|sources|upgrades)'
+                       '(?:\/[a-zA-Z\(\)\.0-9_-](?:[a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?)*'
+                       '\.(?:png|jpg)$'
+            # https://regex101.com/r/0Tt5mC/7 for tests
+            # ^[a-zA-Z\(\)\.0-9_-](?:[a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?(?:\/[a-zA-Z\(\)\.0-9_-](?:[a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?)*\.[a-z0-9]{3}$
             # https://regex101.com/delete/FId7doiOjHil897MHkZ1012h to delete
+
+            #https://regex101.com/r/rPE6YH/2 for tests
+            # ^(?:conditions|pilots|factions|sources|upgrades)(?:\/[a-zA-Z\(\)\.0-9_-](?:[a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?)*\.(?:png|jpg)$
+            #https://regex101.com/delete/VrG2IHZZKpuY4T9e7uyUiw26
+
         },
         'range': {
             'description': 'A range in expressed in range format',
@@ -68,7 +74,7 @@ class SharedDefinitionsBuilder(OverrideMixin, SchemaBuilder):
             'size',
             'slot',
             'action',
-            'file_path',
+            'image_file_path',
             'range',
         ]
         self.build_schema()
@@ -202,7 +208,7 @@ class PilotsBuilder(OverrideMixin, XWingSchemaBuilder):
         },
         'image': {
             'description': 'The file path for this pilot card\'s image.',
-            '$ref': 'definitions.json#/definitions/file_path',
+            '$ref': 'definitions.json#/definitions/image_file_path',
         },
         'xws': {
             'description': 'The pilot\'s unique XWS id as described in the XWS format.',
@@ -578,7 +584,7 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
                 }
             },
             'type': 'object',
-            'anyOf': [
+            'oneOf': [
                 {
                     "$merge": {
                         "source": {
@@ -657,11 +663,11 @@ class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):
         },
         'image': {
             'description': 'The file path for this source\'s image.',
-            '$ref': 'definitions.json#/definitions/file_path',
+            '$ref': 'definitions.json#/definitions/image_file_path',
         },
         'thumb': {
             'description': 'The file path for this source\'s thumbnail.',
-            '$ref': 'definitions.json#/definitions/file_path',
+            '$ref': 'definitions.json#/definitions/image_file_path',
         },
         'contents': {
             'description': 'The sources contents',
@@ -708,7 +714,15 @@ class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):
         },
         'released': {
             'description': 'This value indicates whether this sources has been released or not',
-        }
+        },
+        'release_date': {
+            'description': 'Indicates the date on which the source was released.',
+            'format': 'date'
+        },
+        'announcement_date': {
+            'description': 'Indicates the date on which the source was announced.',
+            'format': 'date'
+        },
     }
 
 
@@ -823,7 +837,7 @@ class UpgradesBuilder(OverrideMixin, XWingSchemaBuilder):
         },
         'image': {
             'description': 'The file path for this upgrade\'s image.',
-            '$ref': 'definitions.json#/definitions/file_path',
+            '$ref': 'definitions.json#/definitions/image_file_path',
         },
         'attack': {
             'description': 'The upgrade\'s attack value.',
@@ -865,7 +879,7 @@ class ConditionsBuilder(OverrideMixin, XWingSchemaBuilder):
         },
         'image': {
             'description': 'The file path for this condition card\'s image.',
-            '$ref': 'definitions.json#/definitions/file_path',
+            '$ref': 'definitions.json#/definitions/image_file_path',
         },
         'name': {
             'description': 'The conditions\'s name as written on the package.',

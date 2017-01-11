@@ -1,3 +1,5 @@
+import datetime
+import re
 from pprint import pprint
 
 from XwingDataDevTools.normalize.base import (
@@ -105,13 +107,12 @@ class IconList(MultipleDataAnalyzer):
     ]
 
     def analise(self):
-        import re
         icons = []
         reg = re.compile(r'\[.*?\]')
         for key in self.data.keys():
             for model in self.data[key]:
                 for t in ['text', 'effect']:
-                    icons.extend(reg.findall(model.get(t,'')))
+                    icons.extend(reg.findall(model.get(t, '')))
         print(set(icons))
 
 
@@ -124,6 +125,30 @@ class ShipNames(SingleDataAnalyzer):
             names.append(model.get('name'))
         pprint(names)
 
+
+class ShipsByReleaseDate(SingleDataAnalyzer):
+    source_key = 'sources'
+
+    def analise(self):
+        today = datetime.date.today().isoformat()
+        self.data = sorted(
+            self.data,
+            key=lambda s: (s.get('release_date', today), s.get('sku', 'SWX999'))
+        )
+        ships_by_release_date = []
+        for model in self.data:
+            for ship in model.get('contents', {}).get('ships', []):
+                if isinstance(ship, dict):
+                    ship_name = ship['name']
+                else:
+                    ship_name = ship
+
+                if ship not in ships_by_release_date:
+                    ships_by_release_date.append(ship_name)
+
+        pprint(ships_by_release_date)
+
+
 if __name__ == '__main__':
     pass
     RangeToString()
@@ -131,3 +156,5 @@ if __name__ == '__main__':
     EnergyToInt()
     IconList()
     ShipNames()
+    ShipsByReleaseDate()
+

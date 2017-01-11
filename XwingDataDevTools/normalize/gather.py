@@ -1,5 +1,6 @@
-from XwingDataDevTools.normalize.base import (SingleDataCollector, DateDataCollector)
 from pprint import pprint
+
+from XwingDataDevTools.normalize.base import (SingleDataCollector, DateDataCollector)
 
 
 class AddMissingSlots(SingleDataCollector):
@@ -41,7 +42,7 @@ class AddMissingSlots(SingleDataCollector):
         options = '\n\t'.join(
             ['{} - {}'.format(i, self.slots[i]) for i in range(len(self.slots))]
         )
-        return  'Which {} should it have?\n\t{}\nResponse:'.format(self.field_name, options)
+        return 'Which {} should it have?\n\t{}\nResponse:'.format(self.field_name, options)
 
 
 class AddMissingReleaseDate(DateDataCollector):

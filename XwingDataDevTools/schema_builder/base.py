@@ -37,6 +37,7 @@ class SchemaBuilder:
         'enum',
         'minLength',
         'maxLength',
+        'format',
         'pattern',
         'multipleOf',
         'minimum',

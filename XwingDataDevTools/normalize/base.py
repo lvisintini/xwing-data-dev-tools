@@ -56,6 +56,26 @@ class MultipleDataSaverMixin:
             json.dump(self.data[source_key], file_object, indent=2, ensure_ascii=False)
 
 
+class PathFinderMixin:
+    def get_field(self, model):
+        if isinstance(self.field_name, list):
+            data = model
+            for path in self.field_name:
+                data = data.get(path)
+                if data is None:
+                    break
+            return data
+        return model[self.field_name]
+
+    def set_field(self, model, new_data):
+        data = model
+        for path in self.field_name[:-1]:
+            if path not in data:
+                data[path] = OrderedDict()
+            data = data[path]
+        data[self.field_name[-1]] = new_data
+
+
 class SingleDataAnalyzer(SingleDataLoaderMixin, XWingDataBaseMixin, ToolBase):
     def __init__(self):
         super().__init__()

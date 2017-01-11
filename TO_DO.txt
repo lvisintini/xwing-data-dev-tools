@@ -6,7 +6,7 @@
 # Attributes order in the data. define one.
 
 # FIXME
-# New project ultimate Game references merging LearToPlay, game reference and FAQ with errata
+
 # Schema to doc
 # Python django Models to json schema
 
@@ -20,25 +20,32 @@
 # https://gist.github.com/guidokessels/5e895c4e5cd882ceb4df57c56fda9cce
 
 # FIXME Tests
-# Ship factions makes sure data is correct by checking all pilots faction.
-# All Pilots have ships.
 # No orphans from sources.
-# Release date + released match up.
-# announcement date is < release date.
 # huge ship maneuvers and maneuvers energy map correctly
+# Icon consitency tests
 
 # FIXME
 # Icons should be ordered
-# icon consistency (turn instead of hard)
-# icons demostrattion is not complete
-# Missing resistance Icon
-
-# FIXME
-# Add dagger to fonts
-
+# icon consistency (turn instead of hard) -> test
+# icons demostration is not complete
+# Missing resistance Icon (maybe)
 
 # repo that linkx xwing data with other projects (icons and XWS, rules) -> npm package
 # Ships second names?
 # MIssing icon for UWING
+# font-weight normal x-wing icons (important)
+# "Missions" inside Play formats in manuals (Check missions rule)
+# Missions index in mission rule
+# PDF del nuevo manual
+# Revisar los parrafos
+# backup BD
+# fe de erratas
+# imagenes en el manual
 
 # CONTACTOS PARA LUCHO
+
+
+# TODO RULEBOOK
+# sources precedence
+# separatate file for clarifications
+# integration of rules with ERRATA
