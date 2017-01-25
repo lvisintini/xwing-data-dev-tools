@@ -22,13 +22,6 @@
 # FIXME Tests
 # No orphans from sources.
 # huge ship maneuvers and maneuvers energy map correctly
-# Icon consitency tests
-
-# FIXME
-# Icons should be ordered
-# icon consistency (turn instead of hard) -> test
-# icons demostration is not complete
-# Missing resistance Icon (maybe)
 
 # repo that linkx xwing data with other projects (icons and XWS, rules) -> npm package
 # Ships second names?

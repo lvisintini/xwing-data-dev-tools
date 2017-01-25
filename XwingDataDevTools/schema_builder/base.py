@@ -26,6 +26,7 @@ class SchemaBuilder:
         'required',
         'additionalProperties',
         'uniqueItems',
+        'additionalItems',
         '$ref',
         'oneOf',
         'allOf',

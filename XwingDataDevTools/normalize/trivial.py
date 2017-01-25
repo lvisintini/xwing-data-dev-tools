@@ -3,7 +3,8 @@ import re
 from pprint import pprint
 
 from XwingDataDevTools.normalize.base import (
-    MultipleDataAnalyticalNormalizer, MultipleDataAnalyzer, SingleDataAnalyzer
+    MultipleDataAnalyticalNormalizer, MultipleDataNormalizer,
+    MultipleDataAnalyzer, SingleDataAnalyzer
 )
 
 
@@ -148,6 +149,27 @@ class ShipsByReleaseDate(SingleDataAnalyzer):
 
         pprint(ships_by_release_date)
 
+
+class TextToMarkdown(MultipleDataNormalizer):
+    source_keys = ['sources', 'upgrades', 'ships', 'pilots', 'conditions',
+                   'damage-deck-core', 'damage-deck-core-tfa']
+
+    def normalize(self):
+
+        for key in self.data.keys():
+            for model in self.data[key]:
+                for f in ['text', 'effect']:
+                    if f in model:
+                        model[f] = model[f].replace('<strong>', '**')
+                        model[f] = model[f].replace('</strong>', '**')
+                        model[f] = model[f].replace('<b>', '**')
+                        model[f] = model[f].replace('</b>', '**')
+                        model[f] = model[f].replace('<br />', '\n')
+                        model[f] = model[f].replace('<br/>', '\n')
+                        model[f] = model[f].replace('<em>', '*')
+                        model[f] = model[f].replace('</em>', '*')
+                        model[f] = model[f].replace('<i>', '*')
+                        model[f] = model[f].replace('</i>', '*')
 
 if __name__ == '__main__':
     pass

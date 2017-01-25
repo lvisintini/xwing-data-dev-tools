@@ -1,5 +1,5 @@
 from XwingDataDevTools.normalize import (
-    foreign_keys, maneuvers, ids, custom_indentation, order, rename, gather
+    foreign_keys, maneuvers, ids, custom_indentation, order, rename, gather, trivial
 )
 
 
@@ -24,9 +24,10 @@ def main(order_fields=False):
     foreign_keys.PilotConditionsForeignKeyNormalization()
     foreign_keys.PilotShipForeignKeyNormalization()
 
-    gather.AddMissingSlots()
     gather.AddMissingAnnouncedDate()
     gather.AddMissingReleaseDate()
+
+    trivial.TextToMarkdown()
 
     if order_fields:
         order.set_preferred_order()

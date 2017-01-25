@@ -46,7 +46,7 @@ class SharedDefinitionsBuilder(OverrideMixin, SchemaBuilder):
         'image_file_path': {
             'description': 'A file path for an image in this package.',
             'type': 'string',
-            'pattern': '^(?:conditions|pilots|factions|sources|upgrades)'
+            'pattern': '^(?:conditions|pilots|factions|sources|upgrades|reference-cards)'
                        '(?:\/[a-zA-Z\(\)\.0-9_-](?:[a-zA-Z\(\)\.0-9\ _-]*[a-zA-Z\(\)\.0-9\ _-])?)*'
                        '\.(?:png|jpg)$'
             # https://regex101.com/r/0Tt5mC/7 for tests
@@ -285,6 +285,12 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
     preferred_order_tail = ['common', 'huge', 'non_huge']
 
     common = {
+        'id': {
+            'description': 'The ship\'s unique id number. It\'s not used in the game but '
+                           'it\'s used to link this ship to other data in this dataset.',
+            'minimum': 0,
+            'type': 'integer'
+        },
         'name': {
             'type': 'string',
             'description': 'The ship\'s name as written on the card itself.',
@@ -440,99 +446,10 @@ class ShipsBuilder(OverrideMixin, XWingSchemaBuilder):
             ]
         },
         'maneuvers_energy': {
-            'type': 'array',
-            'description': 'The ship\s maneuvers energy costs.',
-            'maxItems': 6,
-            'minItems': 0,
-            'uniqueItems': False,
-            'items': {
-                'uniqueItems': False,
-                'description': 'Each element in this array contains a representation of the '
-                               'maneuver costs for the maneuvers available to the huge ship at a '
-                               'particular speed, determined by its position in the array. ei. '
-                               '``ship.maneuvers_energy[1]`` will provide all '
-                               'maneuver cost for the maneuvers available to the huge ship at '
-                               'speed 1.\n'
-                               'This array\'s length should match the array\'s length of the '
-                               'array in the maneuvers property.\n'
-                               'In other words ``ship.maneuvers.length`` should equal to '
-                               '``ship.maneuvers_energy.length``.',
-                'type': 'array',
-                'maxItems': 6,
-                'minItems': 0,
-                'items': {
-                    'description': 'This array is a representation of a huge ship\' maneuvers '
-                                   'energy cost at a particular speed.\n'
-                                   '\n'
-                                   'Each value on this array references a different maneuver '
-                                   'depending on its index, which maps according to the following '
-                                   'list:\n'
-                                   '\t0 = Left Turn\n'
-                                   '\t1 = Left Bank\n'
-                                   '\t2 = Straight\n'
-                                   '\t3 = Right Bank\n'
-                                   '\t4 = Right Turn\n'
-                                   '\t5 = Koiogran Turn\n'
-                                   '\n'
-                                   'Possible values in this array range from 0 to 3 and indicate '
-                                   'the referenced maneuver\'s energy cost.\n'
-                                   '\n'
-                                   'This array\'s length should match the array\'s length of the '
-                                   'array in the maneuvers property at the same speed.\n'
-                                   'In other words ``ship.maneuvers[2].length`` should equal to '
-                                   '``ship.maneuvers_energy[2].length``.',
-                    'type': 'integer',
-                    'minimum': 0,
-                    'maximum': 3,
-                },
-            },
+
         },
         'maneuvers': {
-            'type': 'array',
-            'description': 'The huge ship\s maneuvers.',
-            'maxItems': 6,
-            'minItems': 0,
-            'uniqueItems': False,
-            'items': {
-                'uniqueItems': False,
-                'description': 'Each element in this array contains a representation of the '
-                               'maneuvers available to the ship at a particular speed, determined '
-                               'by its position in the array. ei. ship.maneuvers[1] will provide '
-                               'all maneuvers available to said ship at speed 1.\n'
-                               'This array may be as short as required to provide accurate data, '
-                               'meaning that a missing speed \'index\' indicates that the ship is '
-                               'is not capable of such speed.',
-                'type': 'array',
-                'maxItems': 6,
-                'minItems': 0,
-                'items': {
-                    'description': 'This array is a representation of a huge ship\' maneuvers at a '
-                                   'particular speed.\n'
-                                   '\n'
-                                   'Each value on this array references a different maneuver '
-                                   'depending on its index, which maps according to the following '
-                                   'list:\n'
-                                   '\t0 = Left Turn\n'
-                                   '\t1 = Left Bank\n'
-                                   '\t2 = Straight\n'
-                                   '\t3 = Right Bank\n'
-                                   '\t4 = Right Turn\n'
-                                   '\t5 = Koiogran Turn\n'
-                                   '\n'
-                                   'Possible values in this array range from 0 to 1 and mean the '
-                                   'following:\n'
-                                   '\t0 = Maneuver unavailable\n'
-                                   '\t1 = Maneuver available\n'
-                                   '\n'
-                                   'This array may be as short as required to provide accurate '
-                                   'data, meaning that a missing value for a particular maneuver '
-                                   'type indicates that said maneuver is not available to that '
-                                   'particular huge ship at that particular speed.\n',
-                    'type': 'integer',
-                    'minimum': 0,
-                    'maximum': 1,
-                },
-            },
+
         },
     }
 
@@ -673,19 +590,19 @@ class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):
             'description': 'The sources contents',
             'properties': {
                 'ships': {
-                    'description': 'The ships included in this source.',
-                    "type": "array",
-                    'uniqueItems': True,
-                    "items": {
-                        'type': 'string',
-                        'description': 'A ship\'s name.'
-                    }
+                    "type": "object",
+                    'description': 'The ships included in this source.\n'
+                                   'The object property names (casted as integers) are the ids '
+                                   'of the ships included.\n'
+                                   'Their corresponding integer values indicate how many of those '
+                                   'ships are included in the source.',
+                    'additionalProperties': True,
                 },
                 "pilots": {
                     "type": "object",
                     'description': 'The pilots included in this source.\n'
                                    'The object property names (casted as integers) are the ids '
-                                   'of the upgrades included.\n'
+                                   'of the pilots included.\n'
                                    'Their corresponding integer values indicate how many of those '
                                    'pilots are included in the source.',
                     'additionalProperties': True,
@@ -707,6 +624,17 @@ class SourcesBuilder(OverrideMixin, XWingSchemaBuilder):
                                    'Their corresponding integer values indicate how many of those '
                                    'conditions are included in the source.',
                     'additionalProperties': True,
+                },
+                "reference-cards": {
+                    'description': 'The reference cards included in this source.\n'
+                                   'Each integer in this array is the id of a reference card '
+                                   'included in the source.',
+                    "type": "array",
+                    'uniqueItems': True,
+                    "items": {
+                        'type': 'integer',
+                        'description': 'A reference card\'s id.'
+                    }
                 },
             },
             'required': ['ships', 'pilots', 'upgrades'],
@@ -882,7 +810,7 @@ class ConditionsBuilder(OverrideMixin, XWingSchemaBuilder):
             '$ref': 'definitions.json#/definitions/image_file_path',
         },
         'name': {
-            'description': 'The conditions\'s name as written on the package.',
+            'description': 'The conditions\'s name as written on the card itself.',
             'minLength': 1,
         },
         'text': {
@@ -902,6 +830,35 @@ class ConditionsBuilder(OverrideMixin, XWingSchemaBuilder):
     }
 
 
+class ReferenceCardsBuilder(OverrideMixin, XWingSchemaBuilder):
+    source_keys = ('reference-cards',)
+    target_key = 'reference-cards'
+    title = 'Schema for reference card data file'
+
+    fields = {
+        'id': {
+            'description': 'The reference card\'s unique id number. It\'s not used in the game but '
+                           'it\'s used to link this reference card to other data in this dataset.',
+            'minimum': 0,
+        },
+        'image': {
+            'description': 'The file path for this reference card\'s image.',
+            '$ref': 'definitions.json#/definitions/image_file_path',
+        },
+        'title': {
+            'description': 'The reference card\'s title as written on the card itself.',
+            'minLength': 1,
+        },
+        'subtitle': {
+            'description': 'The reference card\'s subtitle as written on the card itself.',
+            'minLength': 1,
+        },
+        'text': {
+            'description': 'The reference card\'s text describing its effect.',
+            'minLength': 1,
+        },
+    }
+
 if __name__ == '__main__':
     sd = SharedDefinitionsBuilder()
 
@@ -912,6 +869,7 @@ if __name__ == '__main__':
         SourcesBuilder,
         DamageDeckBuilder,
         ConditionsBuilder,
+        ReferenceCardsBuilder,
     ]
 
     for builder in builders:
