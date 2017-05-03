@@ -25,7 +25,7 @@ class AddMissingSlots(SingleDataCollector):
         try:
             new_data = int(new_data)
             new_data = self.slots[int(new_data)]
-        except:
+        except (ValueError, KeyError):
             pass
         else:
             return new_data

@@ -6,10 +6,10 @@ ASSETS_DIR = '/home/lvisintini/src/xwing-data/images/'
 
 
 def main():
-    c = []
     for dir_path, _, file_names in os.walk(ASSETS_DIR):
         for f in file_names:
             abs_path = os.path.join(dir_path, f)
+            print(abs_path)
             source = tinify.from_file(abs_path)
             source.to_file(abs_path)
 

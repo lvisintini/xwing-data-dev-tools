@@ -18,6 +18,8 @@ class ToolBase:
 
 class SingleDataLoaderMixin:
     source_key = ''
+    root = None
+    data = []
 
     def load_data(self):
         with open('{}/{}.js'.format(self.root, self.source_key), 'r') as file_object:
@@ -26,6 +28,8 @@ class SingleDataLoaderMixin:
 
 class SingleDataSaverMixin:
     source_key = ''
+    root = None
+    data = []
 
     def save_data(self):
         with open('{}/{}.js'.format(self.root, self.source_key), 'w') as file_object:
@@ -34,6 +38,8 @@ class SingleDataSaverMixin:
 
 class MultipleDataLoaderMixin:
     source_keys = []
+    root = None
+    data = []
 
     def load_all_data(self):
         for sk in self.source_keys:
@@ -46,6 +52,8 @@ class MultipleDataLoaderMixin:
 
 class MultipleDataSaverMixin:
     source_keys = []
+    root = None
+    data = []
 
     def save_all_data(self):
         for sk in self.source_keys:
@@ -57,6 +65,8 @@ class MultipleDataSaverMixin:
 
 
 class PathFinderMixin:
+    field_name = None
+
     def get_field(self, model):
         if isinstance(self.field_name, list):
             data = model
@@ -234,7 +244,7 @@ class DateDataCollector(SingleDataCollector):
     def clean_input(self, new_data):
         try:
             new_data = datetime.datetime.strptime(new_data, self.input_format).date().isoformat()
-        except:
+        except ValueError:
             pass
         else:
             return new_data
@@ -243,7 +253,7 @@ class DateDataCollector(SingleDataCollector):
     def validate_input(self, new_data):
         try:
             datetime.datetime.strptime(new_data, self.output_format).date()
-        except:
+        except ValueError:
             pass
         else:
             return True
