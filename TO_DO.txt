@@ -30,8 +30,6 @@
 # "Missions" inside Play formats in manuals (Check missions rule)
 # Missions index in mission rule
 # PDF del nuevo manual
-# Revisar los parrafos
-# backup BD
 # fe de erratas
 # imagenes en el manual
 
@@ -39,6 +37,17 @@
 
 
 # TODO RULEBOOK
-# sources precedence
-# separatate file for clarifications
-# integration of rules with ERRATA
+- Rules should have a type: Rule (default), Rule clarification, Card Clarification, Example, Fact
+- Related topics are Related rules that have 'Rule' as type.
+- Examples are related rules that have "example" as type
+- Rule Clarifications are rules that clarify the interaction between rules: they are related rules that have clarification as types.
+- Card Clarifications are rules that have the type "card clarification", and it is and its tied to a card details.
+
+- Rules may have a format: a text field that outline how to print all the clauses. this can be usefull for diagrams
+If not present, do nothing and just print the markdown.
+If present, a format should have a way to populate `rendered` data within a structure, that can be later feed to mermaid.
+we could user mermaid in the website to generate the graph
+we can later use the component
+
+El problema de poner una imagen directamente es que podria escalar para el ojete
+Talvez una forma de hacer esto es haceindo un svg copiando los datos, pero esto puede tomar tiempo y hacer que el texto no tenga el mismo formato que el resto.
